@@ -1,5 +1,3 @@
-# Projet 12 - Développez un tableau de bord d'analytics avec React
-
 # 📊 SportSee – Analytics Dashboard
 
 ![React](https://img.shields.io/badge/React-18.0.0-blue) ![Vite](https://img.shields.io/badge/Vite-4.0-purple) ![Axios](https://img.shields.io/badge/Axios-HTTP-orange) ![Recharts](https://img.shields.io/badge/Recharts-Charts-green)
