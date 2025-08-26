@@ -1,0 +1,149 @@
+.profile-page {
+  max-width: 100%;
+  margin: 0;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.profile-header {
+  margin-bottom: 30px;
+}
+
+.profile-header h2 {
+  font-size: 2.5rem;
+  color: #000000;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.user-name {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+.congratulation-message {
+  font-size: 1.1rem;
+  color: #000000;
+  margin: 0;
+  font-weight: 400;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 30px;
+  align-items: start;
+}
+
+.charts-section {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  min-height: 600px;
+}
+
+.top-row {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 30px;
+}
+
+.chart-container {
+  background: #FBFBFB;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  position: relative;
+
+}
+
+.chart-container.large {
+  min-height: 320px
+}
+
+.chart-container:hover {
+  transform: translateY(-2px);
+}
+
+.chart-container h3 {
+  margin: 0 0 15px 0;
+  color: #000000;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.kpi-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 15px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #e74c3c;
+  background: #fdf2f2;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .bottom-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page {
+    padding: 15px;
+  }
+
+  .profile-header h2 {
+    font-size: 2rem;
+  }
+
+  .bottom-row {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}

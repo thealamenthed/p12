@@ -1,0 +1,71 @@
+.bar-chart-container {
+  position: relative;
+  height: 320px;
+  overflow: visible;
+}
+
+
+.recharts-tooltip-wrapper {
+  z-index: 9999 !important;
+  pointer-events: none;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.chart-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #20253a;
+  /* titre foncé */
+  font-weight: 600;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #74798c;
+  font-weight: 500;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.custom-tooltip {
+  background: #e60000;
+  color: #fff;
+  padding: 10px 8px;
+  border-radius: 4px;
+  display: flex;
+  gap: 6px;
+  flex-direction: column;
+  min-width: 60px;
+  text-align: left;
+}
+
+.custom-tooltip .line {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.chart-error {
+  padding: 16px;
+  background: #fff2f2;
+  color: #c00;
+  border-radius: 6px;
+}
