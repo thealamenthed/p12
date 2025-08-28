@@ -1,0 +1,42 @@
+.line-chart-container {
+  width: 258px;
+  height: 263px;
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #ff0000;
+  /* rouge uniforme par défaut */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.line-chart-container.clicked::after {
+  /* Bande foncée dynamique à partir du point épinglé */
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--split, 60%);
+  right: 0;
+  background: rgba(0, 0, 0, 0.3);
+  /* intensité de l'assombrissement */
+  pointer-events: none;
+  z-index: 10;
+}
+
+.line-title {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
+/* supprime l'effet "bouton" au clic */
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.line-chart-container:focus {
+  outline: none !important;
+}

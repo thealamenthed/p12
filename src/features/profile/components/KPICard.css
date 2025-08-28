@@ -1,0 +1,98 @@
+.kpi-card {
+  background: #FBFBFB;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 258px;
+  height: 124px;
+  box-sizing: border-box;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.kpi-icon {
+  font-size: 1.5rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: white;
+}
+
+.kpi-icon-image {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.kpi-content {
+  flex: 1;
+}
+
+.kpi-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #282d30;
+  margin-bottom: 5px;
+}
+
+.kpi-unit {
+  font-size: 0.8rem;
+  color: #74798c;
+  margin-left: 5px;
+  font-weight: normal;
+}
+
+.kpi-title {
+  font-size: 0.8rem;
+  color: #74798c;
+  font-weight: 500;
+}
+
+/* Couleurs spécifiques pour chaque type de KPI */
+.kpi-card:nth-child(1) .kpi-icon {
+  background: rgba(255, 0, 0, 0.1);
+  /* Calories - rouge */
+}
+
+.kpi-card:nth-child(2) .kpi-icon {
+  background: rgba(74, 184, 255, 0.1);
+  /* Protéines - bleu */
+}
+
+.kpi-card:nth-child(3) .kpi-icon {
+  background: rgba(253, 204, 12, 0.1);
+  /* Glucides - jaune */
+}
+
+.kpi-card:nth-child(4) .kpi-icon {
+  background: rgba(253, 81, 129, 0.1);
+  /* Lipides - rose */
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .kpi-card {
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .kpi-icon {
+    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .kpi-value {
+    font-size: 1rem;
+  }
+}
