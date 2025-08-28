@@ -73,11 +73,53 @@
   transform: translateY(-2px);
 }
 
-.chart-container h3 {
-  margin: 0 0 15px 0;
-  color: #000000;
-  font-size: 1.2rem;
-  font-weight: 600;
+
+/* Uniformiser les 3 cartes de la rangée du bas */
+.chart-container.line-chart-wrapper,
+.chart-container.radar-chart-wrapper,
+.chart-container.radial-chart-wrapper {
+  width: 258px;
+  height: 263px;
+  padding: 0;
+  /* important : pas de padding, le graph = toute la carte */
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+
+/* Fond spécifique par type, comme la maquette */
+.chart-container.line-chart-wrapper {
+  background: #ff0000;
+}
+
+.chart-container.radar-chart-wrapper {
+  background: #282d30;
+}
+
+.chart-container.radial-chart-wrapper {
+  background: #fbfbfb;
+}
+
+/* ou blanc si tu préfères */
+
+/* Le titre à l’intérieur */
+.chart-container.line-chart-wrapper h3,
+.chart-container.radar-chart-wrapper h3,
+.chart-container.radial-chart-wrapper h3 {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  margin: 0;
+  font-size: 15px;
+  opacity: 0.6;
+  color: #ffffff;
+  /* radar/line sur fond foncé */
+}
+
+.chart-container.radial-chart-wrapper h3 {
+  color: #20253a;
+  opacity: 1;
 }
 
 .kpi-grid {
@@ -109,6 +151,20 @@
   padding: 20px;
   text-align: center;
 }
+
+/* Empêche l'outline bleu au clic sur les charts Recharts */
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.chart-container:focus {
+  outline: none !important;
+}
+
+/* Pas d'effet "button" au clic/tap */
+.chart-container,
+.chart-container * {
+  -webkit-tap-highlight-color: transparent;
+}
+
 
 /* Responsive design */
 @media (max-width: 1200px) {

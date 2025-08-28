@@ -61,17 +61,21 @@ const ProfilePage = () => {
 
           {/* Deuxième ligne : LineChart, RadarChart et RadialBarChart */}
           <div className="bottom-row">
-            <div className="chart-container">
-              <h3>Durée moyenne des sessions</h3>
+            <div className="chart-container line-chart-wrapper">
+              <h3>
+                Durée moyenne des
+                <br />
+                sessions
+              </h3>
               <LineChart data={sessionsData} />
             </div>
 
-            <div className="chart-container">
+            <div className="chart-container radar-chart-wrapper">
               <h3>Intensité</h3>
               <RadarChart data={performanceData} />
             </div>
 
-            <div className="chart-container">
+            <div className="chart-container radial-chart-wrapper">
               <h3>Score</h3>
               <RadialBarChart data={userData?.score || 0.12} />
             </div>

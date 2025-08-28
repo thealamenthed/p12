@@ -1,0 +1,24 @@
+.radar-chart-container {
+  width: 100%;
+  height: 300px;
+}
+
+.chart-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .radar-chart-container {
+    height: 250px;
+  }
+  
+  .chart-error {
+    height: 250px;
+  }
+}
