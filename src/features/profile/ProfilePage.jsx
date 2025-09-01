@@ -71,7 +71,6 @@ const ProfilePage = () => {
             </div>
 
             <div className="chart-container radar-chart-wrapper">
-              <h3>Intensité</h3>
               <RadarChart data={performanceData} />
             </div>
 
