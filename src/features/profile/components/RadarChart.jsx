@@ -1,75 +1,90 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { RadarChart as RechartsRadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts'
-import './RadarChart.css'
+import React, {useMemo} from "react";
+import PropTypes from "prop-types";
+import {RadarChart as RechartsRadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer} from "recharts";
+import "./RadarChart.css";
 
 /**
- * Composant graphique radar pour les performances par catégorie
- * @param {Object} props - Propriétés du composant
- * @param {Object} props.data - Données de performance
- * @returns {JSX.Element} Graphique radar
+ * props.data = {
+ *   kind: { 1:"cardio", 2:"energy", 3:"endurance", 4:"strength", 5:"speed", 6:"intensity" },
+ *   data: [{ value:number, kind:number }, ...]
+ * }
  */
-const RadarChart = ({ data }) => {
+const LABELS = {
+  intensity: "Intensité",
+  speed: "Vitesse",
+  strength: "Force",
+  endurance: "Endurance",
+  energy: "Énergie",
+  cardio: "Cardio"
+};
+
+// ordre horaire comme la maquette (haut -> droite -> bas -> gauche)
+const ORDER = ["intensity", "speed", "strength", "endurance", "energy", "cardio"];
+
+// offset dédié pour “Endurance” (descendre car trop haut)
+const ENDURANCE_DY = 8;
+
+export default function RadarChart({data}) {
   if (!data || !data.data || !data.kind) {
-    return <div className="chart-error">Aucune donnée disponible</div>
+    return <div className="chart-error">Aucune donnée disponible</div>;
   }
 
-  // Mapping des catégories
-  const categoryLabels = {
-    cardio: 'Cardio',
-    energy: 'Énergie',
-    endurance: 'Endurance',
-    strength: 'Force',
-    speed: 'Vitesse',
-    intensity: 'Intensité',
-  }
+  // map + ordre imposé
+  const raw = data.data.map((d) => {
+    const key = data.kind[d.kind];
+    return {key, subject: LABELS[key] ?? key, value: d.value};
+  });
 
-  // Formatage des données pour Recharts
-  const chartData = data.data.map((item) => ({
-    subject: categoryLabels[data.kind[item.kind]] || `Catégorie ${item.kind}`,
-    value: item.value,
-    fullMark: 200, // Valeur maximale pour l'échelle
-  }))
+  const chartData = ORDER.map((k) => raw.find((r) => r?.key === k)).filter(Boolean);
+
+  // max “propre” pour les anneaux (multiple de 10)
+  const max = useMemo(() => {
+    const m = Math.max(...chartData.map((d) => d.value));
+    return Math.ceil(m / 10) * 10 || 100; // fallback
+  }, [chartData]);
+
+  // Tick renderer: remonte uniquement “Endurance”
+  const renderAngleTick = ({payload, x, y, textAnchor}) => {
+    const label = payload?.value;
+    const dy = label === "Endurance" ? ENDURANCE_DY : 0;
+    return (
+      <text x={x} y={y} dy={dy} textAnchor={textAnchor} fill="#FFFFFF" fontSize={14} fontWeight={600}>
+        {label}
+      </text>
+    );
+  };
 
   return (
     <div className="radar-chart-container">
-      <ResponsiveContainer width="100%" height={300}>
-        <RechartsRadarChart data={chartData} margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
-          <PolarGrid stroke="#ccc" />
-          <PolarAngleAxis 
-            dataKey="subject" 
-            tick={{ fontSize: 12, fill: '#2c3e50' }}
+      <ResponsiveContainer width="100%" height="100%">
+        <RechartsRadarChart data={chartData} outerRadius="70%" margin={{top: 16, right: 16, bottom: 16, left: 16}}>
+          <PolarGrid gridType="polygon" radialLines={false} stroke="rgba(255,255,255,0.8)" />
+
+          <PolarAngleAxis dataKey="subject" tick={renderAngleTick} />
+
+          <PolarRadiusAxis
+            domain={[0, max]}
+            tickCount={6} // 5 anneaux
+            tick={false}
+            axisLine={false}
+            angle={90}
           />
-          <PolarRadiusAxis 
-            angle={90} 
-            domain={[0, 200]} 
-            tick={{ fontSize: 10, fill: '#7f8c8d' }}
-          />
-          <Radar 
-            name="Performance" 
-            dataKey="value" 
-            stroke="#8884d8" 
-            fill="#8884d8" 
-            fillOpacity={0.3}
-            strokeWidth={2}
-          />
+
+          <Radar dataKey="value" stroke="transparent" fill="#FF0101" fillOpacity={0.6} />
         </RechartsRadarChart>
       </ResponsiveContainer>
     </div>
-  )
+  );
 }
 
 RadarChart.propTypes = {
   data: PropTypes.shape({
-    userId: PropTypes.number,
-    kind: PropTypes.object,
+    kind: PropTypes.object.isRequired,
     data: PropTypes.arrayOf(
       PropTypes.shape({
-        value: PropTypes.number,
-        kind: PropTypes.number,
+        value: PropTypes.number.isRequired,
+        kind: PropTypes.number.isRequired
       })
-    ),
-  }),
-}
-
-export default RadarChart
+    ).isRequired
+  })
+};

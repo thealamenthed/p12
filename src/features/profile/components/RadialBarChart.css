@@ -4,6 +4,20 @@
   position: relative;
 }
 
+/* Cercle blanc au centre de l'anneau */
+.inner-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 176px;
+  /* ajuste selon l’épaisseur de l’anneau */
+  height: 175px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
 .score-display {
   position: absolute;
   top: 50%;
@@ -14,16 +28,17 @@
 }
 
 .score-percentage {
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 5px;
+
 }
 
 .score-label {
-  font-size: 0.9rem;
-  color: #7f8c8d;
+  font-size: 16px;
+  color: #74798C;
   font-weight: 500;
+  padding: 10px;
 }
 
 .chart-error {
