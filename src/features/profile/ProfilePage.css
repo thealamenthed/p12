@@ -118,7 +118,9 @@
 }
 
 .chart-container.radial-chart-wrapper h3 {
-  color: #20253a;
+  color: #20253A;
+  font-size: 15px;
+  font-weight: 500;
   opacity: 1;
 }
 
