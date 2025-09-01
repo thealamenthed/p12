@@ -1,23 +1,33 @@
+/* Le graphe occupe 100% du wrapper .radar-chart-wrapper (258x263) */
 .radar-chart-container {
   width: 100%;
-  height: 300px;
+  height: 100%;
 }
 
+/* Message d'erreur cohérent */
 .chart-error {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 300px;
-  color: #7f8c8d;
+  justify-content: center;
+  color: #cbd5e1;
   font-style: italic;
+  height: 100%;
 }
+
+/* Anti outline (clic) */
+.radar-chart-container:focus,
+.recharts-wrapper:focus,
+.recharts-surface:focus {
+  outline: none !important;
+}
+
 
 /* Responsive design */
 @media (max-width: 768px) {
   .radar-chart-container {
     height: 250px;
   }
-  
+
   .chart-error {
     height: 250px;
   }

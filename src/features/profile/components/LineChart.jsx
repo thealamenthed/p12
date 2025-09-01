@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from "react";
 import PropTypes from "prop-types";
-import {LineChart as RechartsLineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceDot} from "recharts";
+import {LineChart as RechartsLineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceDot, ReferenceArea} from "recharts";
 import "./LineChart.css";
 
 const dayMap = {1: "L", 2: "M", 3: "M", 4: "J", 5: "V", 6: "S", 7: "D"};
@@ -8,37 +8,36 @@ const dayMap = {1: "L", 2: "M", 3: "M", 4: "J", 5: "V", 6: "S", 7: "D"};
 function SessionTooltip({active, payload}) {
   if (!active || !payload?.length) return null;
   const val = payload[0]?.value;
-  return <div style={{background: "#FFFFFF", padding: "6px 8px", fontSize: 12}}>{val} min</div>;
+  return <div style={{background: "#FFFFFF", color: "#000", padding: "6px 8px", fontSize: 12}}>{val} min</div>;
 }
 
 export default function LineChart({data}) {
   const [pinnedIndex, setPinnedIndex] = useState(null);
+  const [hoverIndex, setHoverIndex] = useState(null);
 
   if (!data?.sessions?.length) {
     return <div className="chart-error">Aucune donnée disponible</div>;
   }
 
-  const chartData = data.sessions.map((s) => ({
-    day: dayMap[s.day] || s.day, // ex: "L","M","M","J","V","S","D"
-    sessionLength: s.sessionLength
+  // ➜ Axe géométrique numérique (xi = 1..N) + label pour l'axe visible
+  const chartData = data.sessions.map((s, i) => ({
+    xi: i + 1, // 1..N pour l'axe numérique caché
+    label: dayMap[s.day] || s.day, // L M M J V S D pour les ticks visibles
+    value: s.sessionLength
   }));
+  const N = chartData.length;
 
-  // Domaine Y élargi pour éviter que la ligne touche les lettres
+  // Padding vertical pour que la courbe ne touche pas les labels
   const yDomain = useMemo(() => {
-    const vals = chartData.map((d) => d.sessionLength);
+    const vals = chartData.map((d) => d.value);
     const min = Math.min(...vals);
     const max = Math.max(...vals);
-    const pad = Math.max(5, Math.round((max - min) * 0.15)); // ~15% de marge
+    const pad = Math.max(5, Math.round((max - min) * 0.15));
     return [min - pad, max + pad];
   }, [chartData]);
 
-  // Position de la bande foncée (en %) à partir du point épinglé jusqu'à droite
-  const splitPct = pinnedIndex != null ? ((pinnedIndex + 0.5) / chartData.length) * 100 : null;
-
   return (
-    <div
-      className={`line-chart-container ${pinnedIndex != null ? "clicked" : ""}`}
-      style={pinnedIndex != null ? {["--split"]: `${splitPct}%`} : undefined}>
+    <div className="line-chart-container">
       <div className="line-title">
         Durée moyenne des
         <br />
@@ -48,53 +47,102 @@ export default function LineChart({data}) {
       <ResponsiveContainer width="100%" height="100%">
         <RechartsLineChart
           data={chartData}
-          margin={{top: 32, right: 16, left: 16, bottom: 24}}
-          // Récupère l'index actif fourni par Recharts au clic
-          onClick={(state) => {
-            const idx = state?.activeIndex !== undefined ? parseInt(state.activeIndex) : null;
-            setPinnedIndex((prev) => (idx === null ? null : idx === prev ? null : idx));
+          margin={{top: 32, right: 0, left: 0, bottom: 24}} // ligne bord-à-bord
+          onMouseMove={(st) => {
+            if (typeof st?.activeTooltipIndex === "number") setHoverIndex(st.activeTooltipIndex);
+            else setHoverIndex(null);
           }}
-          onMouseLeave={() => {
-            // ne rien faire ici, la "pin" garde l'état
+          onClick={(st) => {
+            // 1) index “live” si dispo
+            console.log("Click event:", st); // Debug complet
+            // Utiliser activeIndex qui est plus fiable
+            let idx = st?.activeIndex !== undefined ? parseInt(st.activeIndex) : null;
+            console.log("Setting pinnedIndex to:", idx); // Debug
+            // 3) toggle pin
+            setPinnedIndex((prev) => (idx == null ? null : prev === idx ? null : idx));
           }}>
+          {/* AXE X pour la LIGNE — numérique, caché, padding 0 */}
           <XAxis
-            dataKey="day"
+            xAxisId="line"
+            type="number"
+            dataKey="xi"
+            domain={[1, N]}
+            ticks={Array.from({length: N}, (_, i) => i + 1)}
+            padding={{left: 0, right: 0}}
+            hide
+            allowDecimals={false}
+          />
+
+          {/* AXE X pour les LABELS — visible, padding indépendant */}
+          <XAxis
+            xAxisId="labels"
+            type="category"
+            dataKey="label"
             tick={{fontSize: 12, fill: "#FFFFFF", opacity: 0.6, fontWeight: 500}}
             tickLine={false}
             axisLine={false}
             tickMargin={10}
-            padding={{left: 4, right: 4}}
+            padding={{left: 20, right: 20}} // ← Ajuste librement pour les jours
           />
-          {/* Y masqué mais utilisé pour le layout */}
+
+          {/* Axe Y masqué mais utilisé pour le layout */}
           <YAxis hide domain={yDomain} />
 
-          {/* Pas de barre verticale au survol */}
+          {/* Tooltip sans barre verticale */}
           <Tooltip content={SessionTooltip} cursor={false} />
 
+          {/* Courbe liée à l'axe "line" (géométrie) */}
           <Line
+            xAxisId="line"
             type="natural"
-            dataKey="sessionLength"
-            stroke="#FFFFFF"
-            strokeOpacity={0.8}
+            dataKey="value"
+            stroke="url(#lineGradient)"
             strokeWidth={2.5}
             dot={false}
-            activeDot={{r: 4, stroke: "#FFFFFF", strokeWidth: 8, fill: "#FFFFFF"}}
+            activeDot={{r: 4, stroke: "#FFFFFF", strokeWidth: 5, fill: "#FFFFFF", strokeOpacity: 0.7}}
           />
 
-          {/* Dot verrouillée quand on a cliqué */}
+          {/* Définition du dégradé */}
+          <defs>
+            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#FFFFFF" stopOpacity="1" />
+            </linearGradient>
+          </defs>
+
+          {/* Dot verrouillée au point cliqué */}
           {pinnedIndex != null && (
             <ReferenceDot
-              x={chartData[pinnedIndex].day} // valeur de l'axe X (catégorie)
-              y={chartData[pinnedIndex].sessionLength} // valeur de l'axe Y
+              xAxisId="line"
+              x={pinnedIndex + 1}
+              y={chartData[pinnedIndex].value}
               r={4}
               fill="#FFFFFF"
               stroke="#FFFFFF"
-              strokeWidth={8}
-              isFront={true}
+              strokeWidth={5}
+              borderRadius={2}
+              strokeOpacity={0.5}
+              isFront
             />
           )}
         </RechartsLineChart>
       </ResponsiveContainer>
+
+      {/* BANDE ROUGE PLUS FONCÉE (au clic) — via CSS, en dehors du ResponsiveContainer */}
+      {pinnedIndex != null && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: `${(pinnedIndex / (N - 1)) * 100}%`,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.1)",
+            pointerEvents: "none",
+            zIndex: 1000
+          }}
+        />
+      )}
     </div>
   );
 }
