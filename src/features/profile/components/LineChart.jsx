@@ -177,6 +177,7 @@ export default function LineChart({data}) {
             position: "absolute",
             top: 0,
             left: `${(pinnedIndex / (N - 1)) * 100}%`,
+            right: 0,
             bottom: 0,
             background: "rgba(0,0,0,0.1)",
             pointerEvents: "none",
