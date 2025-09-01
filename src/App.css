@@ -19,6 +19,14 @@ body {
   min-height: 100vh;
 }
 
+/* Évite toute barre de scroll horizontale involontaire */
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+
 /* Layout principal */
 .App {
   display: flex;

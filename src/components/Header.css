@@ -1,6 +1,12 @@
 .header {
   background: #020203;
   color: #ffffff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-h);
+  z-index: 1100;
   padding: 20px 40px;
   display: flex;
   justify-content: space-between;
