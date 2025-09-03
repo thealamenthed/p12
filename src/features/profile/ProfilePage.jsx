@@ -26,7 +26,7 @@ import cheeseburgerIcon from "../../assets/icons/cheeseburger.svg";
  * @returns {JSX.Element} La page de profil avec tous les graphiques
  */
 const ProfilePage = () => {
-  const [userId] = useState(12); // ID utilisateur par défaut
+  const [userId] = useState(18); // ID utilisateur par défaut
 
   // Récupération des données via les hooks personnalisés
   const {userData, loading: userLoading, error: userError} = useUserData(userId);
