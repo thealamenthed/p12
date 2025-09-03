@@ -2,9 +2,28 @@ import axios from "axios";
 
 /**
  * Configuration de l'API avec Axios
+ *
+ * LOGIQUE DE CONFIGURATION :
+ * 1. VITE_USE_MOCK=true  → Utilise les données mockées (développement sans backend)
+ * 2. VITE_USE_MOCK=false → Utilise l'API réelle (développement avec backend)
+ * 3. En cas d'erreur API → Fallback automatique vers les mocks
  */
+// Configuration de l'API backend
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+// Configuration des mocks
+// VITE_USE_MOCK=true  → USE_MOCK=true  (utilise les données mockées)
+// VITE_USE_MOCK=false → USE_MOCK=false (utilise l'API réelle)
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
+
+// Log de configuration pour le débogage
+console.log(" Configuration API:", {
+  API_BASE_URL,
+  USE_MOCK,
+  NODE_ENV: import.meta.env.NODE_ENV,
+  "VITE_USE_MOCK (env)": import.meta.env.VITE_USE_MOCK,
+  "USE_MOCK (computed)": USE_MOCK
+});
 
 // Configuration d'Axios
 const apiClient = axios.create({
@@ -36,11 +55,24 @@ export const userService = {
    * @returns {Promise<Object>} Données de l'utilisateur
    */
   async getUserData(userId) {
+    // DÉCISION : Mocks vs API réelle
     if (USE_MOCK) {
+      console.log(" Utilisation des données mockées pour getUserData");
       return getMockUserData(userId);
     }
-    const response = await apiClient.get(`/user/${userId}`);
-    return response.data;
+
+    // UTILISATION DE L'API RÉELLE
+    try {
+      console.log("Appel API réel: GET /user/${userId}");
+      const response = await apiClient.get(`/user/${userId}`);
+      // L'API retourne {data: {...}}, on extrait le contenu
+      return response.data.data;
+    } catch (error) {
+      console.error(" Erreur getUserData:", error);
+      // FALLBACK : En cas d'erreur API, on utilise les mocks
+      console.log(" Fallback vers les données mockées");
+      return getMockUserData(userId);
+    }
   },
 
   /**
@@ -50,10 +82,19 @@ export const userService = {
    */
   async getActivityData(userId) {
     if (USE_MOCK) {
+      console.log(" Utilisation des données mockées pour getActivityData");
       return getMockActivityData(userId);
     }
-    const response = await apiClient.get(`/user/${userId}/activity`);
-    return response.data;
+    try {
+      console.log(" Appel API réel: GET /user/${userId}/activity");
+      const response = await apiClient.get(`/user/${userId}/activity`);
+      // L'API retourne {data: {...}}, on extrait le contenu
+      return response.data.data;
+    } catch (error) {
+      console.error("Erreur getActivityData:", error);
+      console.log(" Fallback vers les données mockées");
+      return getMockActivityData(userId);
+    }
   },
 
   /**
@@ -63,10 +104,19 @@ export const userService = {
    */
   async getSessionsData(userId) {
     if (USE_MOCK) {
+      console.log(" Utilisation des données mockées pour getSessionsData");
       return getMockSessionsData(userId);
     }
-    const response = await apiClient.get(`/user/${userId}/average-sessions`);
-    return response.data;
+    try {
+      console.log(" Appel API réel: GET /user/${userId}/average-sessions");
+      const response = await apiClient.get(`/user/${userId}/average-sessions`);
+      // L'API retourne {data: {...}}, on extrait le contenu
+      return response.data.data;
+    } catch (error) {
+      console.error(" Erreur getSessionsData:", error);
+      console.log("Fallback vers les données mockées");
+      return getMockSessionsData(userId);
+    }
   },
 
   /**
@@ -76,15 +126,24 @@ export const userService = {
    */
   async getPerformanceData(userId) {
     if (USE_MOCK) {
+      console.log(" Utilisation des données mockées pour getPerformanceData");
       return getMockPerformanceData(userId);
     }
-    const response = await apiClient.get(`/user/${userId}/performance`);
-    return response.data;
+    try {
+      console.log("Appel API réel: GET /user/${userId}/performance");
+      const response = await apiClient.get(`/user/${userId}/performance`);
+      // L'API retourne {data: {...}}, on extrait le contenu
+      return response.data.data;
+    } catch (error) {
+      console.error(" Erreur getPerformanceData:", error);
+      console.log(" Fallback vers les données mockées");
+      return getMockPerformanceData(userId);
+    }
   }
 };
 
 /**
- * Données mockées pour le développement - correspondant exactement à la maquette
+ * Données mockées pour le développement
  */
 const getMockUserData = (userId) => {
   return Promise.resolve({
@@ -94,12 +153,12 @@ const getMockUserData = (userId) => {
       lastName: "Dovineau",
       age: 31
     },
-    score: 0.12, // 12% comme dans la maquette
+    score: 0.19,
     keyData: {
-      calorieCount: 1930,
-      proteinCount: 155,
-      carbohydrateCount: 290,
-      lipidCount: 50
+      calorieCount: 2000,
+      proteinCount: 200,
+      carbohydrateCount: 180,
+      lipidCount: 60
     }
   });
 };
@@ -108,16 +167,16 @@ const getMockActivityData = (userId) => {
   return Promise.resolve({
     userId: userId,
     sessions: [
-      {day: "2020-07-01", kilogram: 80, calories: 240},
-      {day: "2020-07-02", kilogram: 80, calories: 220},
-      {day: "2020-07-03", kilogram: 81, calories: 280},
-      {day: "2020-07-04", kilogram: 81, calories: 290},
-      {day: "2020-07-05", kilogram: 80, calories: 160},
-      {day: "2020-07-06", kilogram: 78, calories: 162},
-      {day: "2020-07-07", kilogram: 76, calories: 390},
-      {day: "2020-07-08", kilogram: 77, calories: 320},
-      {day: "2020-07-09", kilogram: 79, calories: 280},
-      {day: "2020-07-10", kilogram: 78, calories: 250}
+      {day: "2020-07-01", kilogram: 82, calories: 260},
+      {day: "2020-07-02", kilogram: 82, calories: 280},
+      {day: "2020-07-03", kilogram: 82, calories: 290},
+      {day: "2020-07-04", kilogram: 88, calories: 280},
+      {day: "2020-07-05", kilogram: 78, calories: 170},
+      {day: "2020-07-06", kilogram: 81, calories: 182},
+      {day: "2020-07-07", kilogram: 83, calories: 400},
+      {day: "2020-07-08", kilogram: 76, calories: 360},
+      {day: "2020-07-09", kilogram: 75, calories: 220},
+      {day: "2020-07-10", kilogram: 79, calories: 210}
     ]
   });
 };
@@ -126,13 +185,13 @@ const getMockSessionsData = (userId) => {
   return Promise.resolve({
     userId: userId,
     sessions: [
-      {day: 1, sessionLength: 30},
+      {day: 1, sessionLength: 10},
       {day: 2, sessionLength: 23},
-      {day: 3, sessionLength: 45},
-      {day: 4, sessionLength: 50},
-      {day: 5, sessionLength: 0},
-      {day: 6, sessionLength: 0},
-      {day: 7, sessionLength: 60}
+      {day: 3, sessionLength: 35},
+      {day: 4, sessionLength: 60},
+      {day: 5, sessionLength: 20},
+      {day: 6, sessionLength: 40},
+      {day: 7, sessionLength: 65}
     ]
   });
 };
@@ -149,12 +208,12 @@ const getMockPerformanceData = (userId) => {
       6: "intensity"
     },
     data: [
-      {value: 80, kind: 1},
-      {value: 120, kind: 2},
-      {value: 140, kind: 3},
-      {value: 50, kind: 4},
-      {value: 200, kind: 5},
-      {value: 90, kind: 6}
+      {value: 70, kind: 1},
+      {value: 140, kind: 2},
+      {value: 120, kind: 3},
+      {value: 60, kind: 4},
+      {value: 100, kind: 5},
+      {value: 70, kind: 6}
     ]
   });
 };

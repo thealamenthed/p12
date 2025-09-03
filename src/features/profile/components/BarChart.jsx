@@ -52,22 +52,19 @@ const BarChart = ({data}) => {
   // Domaine + ticks du Y (kg) et max des calories
   const {kgDomain, kgTicks, calMax} = useMemo(() => {
     const kgVals = chartData.map((d) => d.kilogram);
-    const min = Math.min(...kgVals);
-    const max = Math.max(...kgVals);
-
+    const min = Math.min(...kgVals) - 5; // -5 pour plus de marge inférieure pour le poids
+    const max = Math.max(...kgVals) + 5; // +5 pour plus de marge supérieure pour le poids
     const span = Math.max(1, max - min);
     const step = Math.ceil(span / 2); // 3 ticks: min, mid, max
-    const start = Math.floor(min / step) * step;
-    const end = start + step * 2;
-
     const calMax = Math.ceil(Math.max(...chartData.map((d) => d.calories)) + 20);
 
     return {
-      kgDomain: [start, end],
-      kgTicks: [start, start + step, end],
+      kgDomain: [min, max],
+      kgTicks: [min, min + step, max],
       calMax
     };
   }, [chartData]);
+  console.log(kgTicks);
 
   return (
     <div className="bar-chart-container">
@@ -89,12 +86,10 @@ const BarChart = ({data}) => {
         <RechartsBarChart data={chartData} margin={{top: 20, right: 20, left: 20, bottom: 10}} barCategoryGap={32} barGap={8}>
           {/* On désactive le grid horizontal, on trace nos 3 lignes */}
           <CartesianGrid vertical={false} horizontal={false} stroke={COLORS.grid} />
-
           {/* Lignes horizontales personnalisées (alignées sur l’axe de droite) */}
           <ReferenceLine yAxisId="right" y={kgTicks[0]} stroke={COLORS.grid} strokeWidth={1} />
           <ReferenceLine yAxisId="right" y={kgTicks[1]} stroke={COLORS.grid} strokeDasharray="3 3" />
           <ReferenceLine yAxisId="right" y={kgTicks[2]} stroke={COLORS.grid} strokeDasharray="3 3" />
-
           <XAxis
             dataKey="day"
             type="category"
@@ -103,10 +98,8 @@ const BarChart = ({data}) => {
             tickLine={false}
             axisLine={false}
           />
-
           {/* Calories à gauche (caché) */}
           <YAxis yAxisId="left" orientation="left" domain={[0, calMax]} hide />
-
           {/* Poids à droite */}
           <YAxis
             yAxisId="right"
@@ -118,9 +111,7 @@ const BarChart = ({data}) => {
             axisLine={false}
             allowDecimals={false}
           />
-
           <Tooltip cursor={{fill: COLORS.cursor}} content={<CustomTooltip />} />
-
           <Bar yAxisId="right" dataKey="kilogram" name="kg" fill={COLORS.kg} radius={[3, 3, 0, 0]} barSize={7} />
           <Bar yAxisId="left" dataKey="calories" name="Kcal" fill={COLORS.kcal} radius={[3, 3, 0, 0]} barSize={7} />
         </RechartsBarChart>
