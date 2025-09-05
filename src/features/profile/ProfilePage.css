@@ -9,7 +9,7 @@
   margin-bottom: 30px;
 }
 
-.profile-header h2 {
+.profile-header h1 {
   font-size: 2.5rem;
   color: #000000;
   margin-bottom: 10px;
@@ -28,14 +28,14 @@
   font-weight: 400;
 }
 
-.dashboard-grid {
+.profile-grid {
   display: grid;
   grid-template-columns: 1fr 300px;
   gap: 30px;
   align-items: start;
 }
 
-.charts-section {
+.charts-col {
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -124,7 +124,13 @@
   opacity: 1;
 }
 
-.kpi-grid {
+.small-charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 30px;
+}
+
+.kpi-col {
   display: flex;
   flex-direction: column;
   justify-content: space-between;

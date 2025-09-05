@@ -1,100 +1,103 @@
-import React, {useState, useEffect} from "react";
-import PropTypes from "prop-types";
+import React, {useEffect, useState} from "react";
 import "./ProfilePage.css";
 
-// Composants de graphiques
 import BarChart from "./components/BarChart";
 import LineChart from "./components/LineChart";
 import RadarChart from "./components/RadarChart";
 import RadialBarChart from "./components/RadialBarChart";
 import KPICard from "./components/KPICard";
+import caloriesIcon from "../../assets/icons/energy.svg";
+import proteinIcon from "../../assets/icons/chicken.svg";
+import carbsIcon from "../../assets/icons/apple.svg";
+import lipidIcon from "../../assets/icons/cheeseburger.svg";
 
-// Hooks et services
-import {useUserData} from "./hooks/useUserData";
-import {useActivityData} from "./hooks/useActivityData";
-import {useSessionsData} from "./hooks/useSessionsData";
-import {usePerformanceData} from "./hooks/usePerformanceData";
+import {getUser, getUserActivity, getUserSessions, getUserPerformance} from "../../api/user";
+import {mapUser} from "./mappers/mapUser";
+import {mapActivity} from "./mappers/mapActivity";
+import {mapSessions} from "./mappers/mapSessions";
+import {mapPerformance} from "./mappers/mapPerformance";
 
-// Icônes
-import energyIcon from "../../assets/icons/energy.svg";
-import chickenIcon from "../../assets/icons/chicken.svg";
-import appleIcon from "../../assets/icons/apple.svg";
-import cheeseburgerIcon from "../../assets/icons/cheeseburger.svg";
+export default function ProfilePage({userId = 12}) {
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(null);
 
-/**
- * Page de profil utilisateur avec tableau de bord d'analytics
- * @returns {JSX.Element} La page de profil avec tous les graphiques
- */
-const ProfilePage = () => {
-  const [userId] = useState(18); // ID utilisateur par défaut
+  const [user, setUser] = useState(null);
+  const [activity, setActivity] = useState({sessions: []});
+  const [sessions, setSessions] = useState({sessions: []});
+  const [performance, setPerformance] = useState({kind: {}, data: []});
 
-  // Récupération des données via les hooks personnalisés
-  const {userData, loading: userLoading, error: userError} = useUserData(userId);
-  const {activityData, loading: activityLoading} = useActivityData(userId);
-  const {sessionsData, loading: sessionsLoading} = useSessionsData(userId);
-  const {performanceData, loading: performanceLoading} = usePerformanceData(userId);
+  useEffect(() => {
+    let mounted = true;
+    async function load() {
+      try {
+        setLoading(true);
+        setErr(null);
 
-  if (userLoading || activityLoading || sessionsLoading || performanceLoading) {
-    return <div className="loading">Chargement des données...</div>;
-  }
+        const [u, a, s, p] = await Promise.all([getUser(userId), getUserActivity(userId), getUserSessions(userId), getUserPerformance(userId)]);
 
-  if (userError) {
-    return <div className="error">Erreur lors du chargement des données: {userError}</div>;
-  }
+        if (!mounted) return;
+        setUser(mapUser(u));
+        setActivity(mapActivity(a));
+        setSessions(mapSessions(s));
+        setPerformance(mapPerformance(p));
+      } catch (e) {
+        if (mounted) setErr(e.message || String(e));
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [userId]);
+
+  // KPI list (adapter selon ton KPICard)
+  const kpis = user?.keyData
+    ? [
+        {title: "Calories", value: user.keyData.calories, unit: "kCal", icon: caloriesIcon},
+        {title: "Protéines", value: user.keyData.proteins, unit: "g", icon: proteinIcon},
+        {title: "Glucides", value: user.keyData.carbs, unit: "g", icon: carbsIcon},
+        {title: "Lipides", value: user.keyData.lipids, unit: "g", icon: lipidIcon}
+      ]
+    : [];
 
   return (
-    <div className="profile-page">
-      <div className="profile-header">
-        <h2>
-          Bonjour <span className="user-name">{userData?.userInfos?.firstName || "Thomas"}</span>
-        </h2>
-        <p className="congratulation-message">Félicitations ! Vous avez explosé vos objectifs hier 👏</p>
-      </div>
+    <section className="profile-page">
+      <header className="profile-header">
+        <h1 className="profile-title">
+          Bonjour <span className="user-name">{user?.firstName ?? "Utilisateur"}</span>
+        </h1>
+        <p className="congratulation-message">{loading ? "Chargement des données…" : "Félicitations ! Vous avez explosé vos objectifs hier 👏"}</p>
+        {err ? <p style={{color: "#E60000", margin: 0}}>Erreur de chargement : {err}</p> : null}
+      </header>
 
-      <div className="dashboard-grid">
-        {/* Section des graphiques */}
-        <div className="charts-section">
-          {/* Graphique d'activité */}
-          <div className="chart-container large">
-            <BarChart data={activityData} />
+      <div className="profile-grid">
+        <div className="charts-col">
+          <div className="chart-container">
+            {/* Titre optionnel local : <h3 className="chart-title">Activité quotidienne</h3> */}
+            <BarChart data={activity} />
           </div>
 
-          {/* Deuxième ligne : LineChart, RadarChart et RadialBarChart */}
-          <div className="bottom-row">
+          <div className="small-charts-row">
             <div className="chart-container line-chart-wrapper">
-              <h3>
-                Durée moyenne des
-                <br />
-                sessions
-              </h3>
-              <LineChart data={sessionsData} />
+              <LineChart data={sessions} />
             </div>
-
             <div className="chart-container radar-chart-wrapper">
-              <RadarChart data={performanceData} />
+              <RadarChart data={performance} />
             </div>
-
             <div className="chart-container radial-chart-wrapper">
-              <h3>Score</h3>
-              <RadialBarChart data={userData?.score || 0.12} />
+              <RadialBarChart data={user?.score ?? 0} />
             </div>
           </div>
         </div>
 
-        {/* Section KPI */}
-        <div className="kpi-grid">
-          <KPICard title="Calories" value={userData?.keyData?.calorieCount || 1930} unit="kCal" icon={energyIcon} />
-          <KPICard title="Proteines" value={userData?.keyData?.proteinCount || 155} unit="g" icon={chickenIcon} />
-          <KPICard title="Glucides" value={userData?.keyData?.carbohydrateCount || 290} unit="g" icon={appleIcon} />
-          <KPICard title="Lipides" value={userData?.keyData?.lipidCount || 50} unit="g" icon={cheeseburgerIcon} />
-        </div>
+        <aside className="kpi-col">
+          {kpis.map((k, i) => (
+            <KPICard key={i} title={k.title} value={k.value} unit={k.unit} icon={k.icon} />
+          ))}
+        </aside>
       </div>
-    </div>
+    </section>
   );
-};
-
-ProfilePage.propTypes = {
-  // Aucune prop requise pour ce composant
-};
-
-export default ProfilePage;
+}
