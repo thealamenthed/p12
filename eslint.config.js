@@ -23,7 +23,7 @@ export default [
       ...js.configs.recommended.rules,
 
       // Petits réglages confort
-      "no-unused-vars": ["warn", {argsIgnorePattern: "^_", varsIgnorePattern: "^_"}],
+      "no-unused-vars": "off",
       "no-console": "off"
     }
   }
