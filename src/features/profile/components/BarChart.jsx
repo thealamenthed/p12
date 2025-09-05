@@ -64,7 +64,6 @@ const BarChart = ({data}) => {
       calMax
     };
   }, [chartData]);
-  console.log(kgTicks);
 
   return (
     <div className="bar-chart-container">
