@@ -19,7 +19,7 @@ export default function LineChart({data}) {
   // Sécurise les données (aucun early return)
   const sessions = Array.isArray(data?.sessions) ? data.sessions : [];
 
-  // Dataset : axe géométrique numérique xi = 1..N + label (L..D) pour l’axe visible
+  // Dataset : axe géométrique numérique xi = 1..N + label (L..D) pour l'axe visible
   const chartData = useMemo(
     () =>
       sessions.map((s, i) => ({
@@ -139,7 +139,6 @@ export default function LineChart({data}) {
 
           {/* Pas de barre verticale au survol */}
           <Tooltip content={<SessionTooltip />} cursor={false} />
-
           {/* Bande foncée côté droit à partir du point cliqué */}
           {hasPin && (
             <ReferenceArea
