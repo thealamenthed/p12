@@ -1,4 +1,3 @@
-import React from "react";
 import "./Sidebar.css";
 import yogaIcon from "../assets/icons/yoga.png";
 import swimmingIcon from "../assets/icons/swimming.png";
