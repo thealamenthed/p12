@@ -20,27 +20,27 @@ const LABELS = {
 
 // ordre horaire comme la maquette (haut -> droite -> bas -> gauche)
 const ORDER = ["intensity", "speed", "strength", "endurance", "energy", "cardio"];
-
-// offset dédié pour “Endurance” (descendre car trop haut)
-const ENDURANCE_DY = 8;
+const ENDURANCE_DY = 8; // descend légèrement le label "Endurance"
 
 export default function RadarChart({data}) {
-  if (!data || !data.data || !data.kind) {
-    return <div className="chart-error">Aucune donnée disponible</div>;
-  }
+  // Sécurise les entrées
+  const kind = data?.kind || {};
+  const rawData = Array.isArray(data?.data) ? data.data : [];
 
   // map + ordre imposé
-  const raw = data.data.map((d) => {
-    const key = data.kind[d.kind];
-    return {key, subject: LABELS[key] ?? key, value: d.value};
-  });
+  const chartData = useMemo(() => {
+    const mapped = rawData.map((d) => {
+      const key = kind[d.kind];
+      return {key, subject: LABELS[key] ?? String(key ?? ""), value: Number(d.value) || 0};
+    });
+    return ORDER.map((k) => mapped.find((r) => r?.key === k)).filter(Boolean);
+  }, [rawData, kind]);
 
-  const chartData = ORDER.map((k) => raw.find((r) => r?.key === k)).filter(Boolean);
-
-  // max “propre” pour les anneaux (multiple de 10)
+  // max “propre” pour les anneaux (multiple de 10) — fallback si pas de data
   const max = useMemo(() => {
+    if (!chartData.length) return 100;
     const m = Math.max(...chartData.map((d) => d.value));
-    return Math.ceil(m / 10) * 10 || 100; // fallback
+    return Math.ceil(m / 10) * 10 || 100;
   }, [chartData]);
 
   // Tick renderer: remonte uniquement “Endurance”
@@ -56,6 +56,9 @@ export default function RadarChart({data}) {
 
   return (
     <div className="radar-chart-container">
+      {/* Overlay "no data" si vide */}
+      {!chartData.length && <div className="chart-error">Aucune donnée disponible</div>}
+
       <ResponsiveContainer width="100%" height="100%">
         <RechartsRadarChart data={chartData} outerRadius="70%" margin={{top: 16, right: 16, bottom: 16, left: 16}}>
           <PolarGrid gridType="polygon" radialLines={false} stroke="rgba(255,255,255,0.8)" />
@@ -79,12 +82,12 @@ export default function RadarChart({data}) {
 
 RadarChart.propTypes = {
   data: PropTypes.shape({
-    kind: PropTypes.object.isRequired,
+    kind: PropTypes.object,
     data: PropTypes.arrayOf(
       PropTypes.shape({
-        value: PropTypes.number.isRequired,
-        kind: PropTypes.number.isRequired
+        value: PropTypes.number,
+        kind: PropTypes.number
       })
-    ).isRequired
+    )
   })
 };
