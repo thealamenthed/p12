@@ -20,7 +20,7 @@ const KPICard = ({title, value, unit, icon}) => {
       <div className="kpi-icon">{isImage ? <img src={icon} alt={title} className="kpi-icon-image" /> : icon}</div>
       <div className="kpi-content">
         <div className="kpi-value">
-          {value.toLocaleString()}
+          {value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
           <span className="kpi-unit">{unit}</span>
         </div>
         <div className="kpi-title">{title}</div>
