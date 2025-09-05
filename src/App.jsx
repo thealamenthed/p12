@@ -1,8 +1,7 @@
-import React from 'react'
-import './App.css'
-import Sidebar from './components/Sidebar'
-import Header from './components/Header'
-import ProfilePage from './features/profile/ProfilePage'
+import "./App.css";
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import ProfilePage from "./features/profile/ProfilePage";
 
 /**
  * Composant principal de l'application SportSee
@@ -19,7 +18,7 @@ function App() {
         </main>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
