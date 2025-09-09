@@ -4,21 +4,34 @@ import {RadialBarChart as RChart, RadialBar, ResponsiveContainer, PolarAngleAxis
 import "./RadialBarChart.css";
 
 /**
- * props.data : nombre entre 0 et 1 (score) – ex: 0.12
+ * Composant graphique en barre radiale pour afficher le score de l'utilisateur
+ * Affiche un pourcentage de progression sous forme de barre circulaire avec texte centré
+ * @param {Object} props - Propriétés du composant
+ * @param {number} props.data - Score de l'utilisateur entre 0 et 1 (ex: 0.12 = 12%)
+ * @returns {JSX.Element} Graphique en barre radiale avec pourcentage centré
  */
 export default function RadialBarChart({data}) {
-  // pas d’early return (stabilité hooks)
+  /**
+   * Calcul et sécurisation du score en pourcentage
+   * Convertit le score (0-1) en pourcentage (0-100) avec validation
+   * @returns {number} Pourcentage arrondi entre 0 et 100
+   */
   const scorePct = useMemo(() => {
     const n = Number.isFinite(data) ? data : 0;
     const pct = Math.max(0, Math.min(1, n)) * 100;
     return Math.round(pct);
   }, [data]);
 
+  /**
+   * Formatage des données pour le graphique radial
+   * Crée un tableau avec le score formaté pour Recharts
+   * @returns {Array} Données formatées pour RadialBarChart
+   */
   const series = useMemo(() => [{name: "score", value: scorePct}], [scorePct]);
 
   return (
     <div className="radial-bar-chart-container" style={{position: "relative", width: "100%", height: "100%"}}>
-      {/* Centre blanc (sous le texte, au-dessus du chart background) */}
+      {/* Fond blanc circulaire au centre pour masquer le graphique */}
       <div
         className="inner-bg"
         style={{
@@ -35,7 +48,7 @@ export default function RadialBarChart({data}) {
         }}
       />
 
-      {/* Texte centré au-dessus */}
+      {/* Affichage du score centré avec texte explicatif */}
       <div
         className="score-display"
         style={{
@@ -53,19 +66,19 @@ export default function RadialBarChart({data}) {
         </div>
       </div>
 
-      {/* Overlay “no data” sémantique si jamais (ici score 0 = data possible, donc on n’empêche pas l’affichage) */}
-      {/* Afficher un message quand data est null/undefined :
-       */}
+      {/* Message d'absence de données (seulement si data est null/undefined) */}
       {data == null && <div className="chart-error">Aucune donnée disponible</div>}
       <ResponsiveContainer width="100%" height="100%">
         <RChart data={series} innerRadius="70%" outerRadius="80%" startAngle={90} endAngle={450}>
+          {/* Axe polaire masqué pour le domaine 0-100 */}
           <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+          {/* Barre radiale avec progression rouge et piste grise */}
           <RadialBar
             dataKey="value"
             clockWise
             cornerRadius={999}
-            fill="#FF0101" // progress rouge
-            background={{fill: "#FBFBFB"}} // piste claire
+            fill="#FF0101" // Couleur de progression rouge
+            background={{fill: "#FBFBFB"}} // Piste de fond gris clair
           />
         </RChart>
       </ResponsiveContainer>
