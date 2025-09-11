@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: features/profile/components/RadialBarChart.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: features/profile/components/RadialBarChart.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useMemo} from "react";
+import PropTypes from "prop-types";
+import {RadialBarChart as RChart, RadialBar, ResponsiveContainer, PolarAngleAxis} from "recharts";
+import "./RadialBarChart.css";
+
+/**
+ * Composant graphique en barre radiale pour afficher le score de l'utilisateur
+ * Affiche un pourcentage de progression sous forme de barre circulaire avec texte centré
+ * @param {Object} props - Propriétés du composant
+ * @param {number} props.data - Score de l'utilisateur entre 0 et 1 (ex: 0.12 = 12%)
+ * @returns {JSX.Element} Graphique en barre radiale avec pourcentage centré
+ */
+export default function RadialBarChart({data}) {
+  /**
+   * Calcul et sécurisation du score en pourcentage
+   * Convertit le score (0-1) en pourcentage (0-100) avec validation
+   * @returns {number} Pourcentage arrondi entre 0 et 100
+   */
+  const scorePct = useMemo(() => {
+    const n = Number.isFinite(data) ? data : 0;
+    const pct = Math.max(0, Math.min(1, n)) * 100;
+    return Math.round(pct);
+  }, [data]);
+
+  /**
+   * Formatage des données pour le graphique radial
+   * Crée un tableau avec le score formaté pour Recharts
+   * @returns {Array} Données formatées pour RadialBarChart
+   */
+  const series = useMemo(() => [{name: "score", value: scorePct}], [scorePct]);
+
+  return (
+    &lt;div className="radial-bar-chart-container" style={{position: "relative", width: "100%", height: "100%"}}>
+      {/* Fond blanc circulaire au centre pour masquer le graphique */}
+      &lt;div
+        className="inner-bg"
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: 174,
+          height: 174,
+          background: "#fff",
+          borderRadius: "50%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 1,
+          pointerEvents: "none"
+        }}
+      />
+
+      {/* Affichage du score centré avec texte explicatif */}
+      &lt;div
+        className="score-display"
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "grid",
+          placeItems: "center",
+          pointerEvents: "none",
+          textAlign: "center",
+          zIndex: 2
+        }}>
+        &lt;div>
+          &lt;div style={{fontSize: 28, fontWeight: 700, color: "#282d30", lineHeight: 1, marginBottom: 6}}>{scorePct}%&lt;/div>
+          &lt;div style={{fontSize: 14, color: "#74798c", fontWeight: 600}}>de votre objectif&lt;/div>
+        &lt;/div>
+      &lt;/div>
+
+      {/* Message d'absence de données (seulement si data est null/undefined) */}
+      {data == null &amp;&amp; &lt;div className="chart-error">Aucune donnée disponible&lt;/div>}
+      &lt;ResponsiveContainer width="100%" height="100%">
+        &lt;RChart data={series} innerRadius="70%" outerRadius="80%" startAngle={90} endAngle={450}>
+          {/* Axe polaire masqué pour le domaine 0-100 */}
+          &lt;PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+          {/* Barre radiale avec progression rouge et piste grise */}
+          &lt;RadialBar
+            dataKey="value"
+            clockWise
+            cornerRadius={999}
+            fill="#FF0101" // Couleur de progression rouge
+            background={{fill: "#FBFBFB"}} // Piste de fond gris clair
+          />
+        &lt;/RChart>
+      &lt;/ResponsiveContainer>
+    &lt;/div>
+  );
+}
+
+RadialBarChart.propTypes = {
+  data: PropTypes.number // ex: 0.12
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#BASE_URL">BASE_URL</a></li><li><a href="global.html#BarChart">BarChart</a></li><li><a href="global.html#COLORS">COLORS</a></li><li><a href="global.html#CustomTooltip">CustomTooltip</a></li><li><a href="global.html#ENDURANCE_DY">ENDURANCE_DY</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#KPICard">KPICard</a></li><li><a href="global.html#LABELS">LABELS</a></li><li><a href="global.html#ORDER">ORDER</a></li><li><a href="global.html#SessionTooltip">SessionTooltip</a></li><li><a href="global.html#Sidebar">Sidebar</a></li><li><a href="global.html#USE_MOCK">USE_MOCK</a></li><li><a href="global.html#api">api</a></li><li><a href="global.html#clearError">clearError</a></li><li><a href="global.html#dayMap">dayMap</a></li><li><a href="global.html#fetchActivity">fetchActivity</a></li><li><a href="global.html#fetchPerformance">fetchPerformance</a></li><li><a href="global.html#fetchSessions">fetchSessions</a></li><li><a href="global.html#fetchUser">fetchUser</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#getUserActivity">getUserActivity</a></li><li><a href="global.html#getUserPerformance">getUserPerformance</a></li><li><a href="global.html#getUserSessions">getUserSessions</a></li><li><a href="global.html#http">http</a></li><li><a href="global.html#mapActivity">mapActivity</a></li><li><a href="global.html#mapPerformance">mapPerformance</a></li><li><a href="global.html#mapSessions">mapSessions</a></li><li><a href="global.html#mapUser">mapUser</a></li><li><a href="global.html#mockActivity">mockActivity</a></li><li><a href="global.html#mockPerformance">mockPerformance</a></li><li><a href="global.html#mockSessions">mockSessions</a></li><li><a href="global.html#mockUser">mockUser</a></li><li><a href="global.html#useActivityData">useActivityData</a></li><li><a href="global.html#usePerformanceData">usePerformanceData</a></li><li><a href="global.html#useSessionsData">useSessionsData</a></li><li><a href="global.html#useUserData">useUserData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Sep 11 2025 22:33:28 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

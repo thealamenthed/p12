@@ -1,8 +1,16 @@
 // eslint.config.js — Flat config compatible ESLint 8
 import js from "@eslint/js";
 import globals from "globals";
+import jsdoc from "eslint-plugin-jsdoc";
 
 export default [
+  jsdoc.configs["flat/recommended"],
+  {
+    rules: {
+      "jsdoc/require-jsdoc": ["warn", {publicOnly: true}],
+      "jsdoc/require-returns": "off"
+    }
+  },
   {
     files: ["**/*.{js,jsx}"],
     ignores: ["dist/**", "node_modules/**"],

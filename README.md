@@ -145,6 +145,23 @@ npm run build
 
 Les fichiers de production seront générés dans le dossier `dist/`.
 
+# Documentation Technique (JSDoc)
+
+Cette documentation est générée automatiquement à partir des commentaires JSDoc présents dans le code (`src/**/*.js|jsx`).
+
+## Générer la documentation
+
+```bash
+# Installation (une seule fois)
+npm i -D jsdoc jsdoc-to-markdown
+
+# Générer la doc HTML (dans docs/html)
+npm run docs:html
+
+# Générer la doc Markdown (docs/api.md)
+npm run docs:md
+
+
 ## 🤝 Contribution
 
 1. Fork le projet
@@ -160,3 +177,4 @@ Ce projet est réalisé dans le cadre du parcours _Développeur Web Front End_ d
 ## 👤 Auteur
 
 Projet réalisé par Dalila LE dans le cadre du parcours _Développeur Web Front End -- OpenClassrooms_.
+```

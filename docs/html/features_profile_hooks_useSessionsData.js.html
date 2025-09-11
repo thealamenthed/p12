@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: features/profile/hooks/useSessionsData.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: features/profile/hooks/useSessionsData.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {useState, useEffect} from "react";
+import {getUserSessions} from "../../../api/user";
+import {mapSessions} from "../mappers/mapSessions";
+
+/**
+ * Hook personnalisé pour gérer les données de sessions d'entraînement
+ * Encapsule la logique de récupération, transformation et gestion d'état des données de sessions
+ * @param {number} userId - Identifiant de l'utilisateur
+ * @returns {Object} État et données de sessions
+ * @returns {Object} returns.sessions - Données de sessions mappées avec sessions
+ * @returns {boolean} returns.loading - État de chargement des données
+ * @returns {string|null} returns.error - Message d'erreur éventuel
+ * @returns {function} returns.refetch - Fonction pour recharger les données
+ * @returns {function} returns.clearError - Fonction pour effacer l'erreur
+ *
+ * @example
+ * ```jsx
+ * function SessionsChart({ userId }) {
+ *   const { sessions, loading, error, refetch } = useSessionsData(userId);
+ *
+ *   if (loading) return &lt;div>Chargement des sessions...&lt;/div>;
+ *   if (error) return &lt;div>Erreur: {error}&lt;/div>;
+ *
+ *   return (
+ *     &lt;LineChart data={sessions.sessions} />
+ *   );
+ * }
+ * ```
+ */
+export function useSessionsData(userId) {
+  /**
+   * État des données de sessions
+   * @type {[Object, function]} sessions - Données de sessions avec sessions
+   */
+  const [sessions, setSessions] = useState({sessions: []});
+
+  /**
+   * État de chargement
+   * @type {[boolean, function]} loading - Indique si les données sont en cours de chargement
+   */
+  const [loading, setLoading] = useState(true);
+
+  /**
+   * État d'erreur
+   * @type {[string|null, function]} error - Message d'erreur éventuel
+   */
+  const [error, setError] = useState(null);
+
+  /**
+   * Fonction pour récupérer les données de sessions
+   * Gère le chargement, la transformation et la gestion d'erreurs
+   * @async
+   * @function fetchSessions
+   */
+  const fetchSessions = async () => {
+    if (!userId) {
+      setError("ID utilisateur requis");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Récupération des données brutes depuis l'API
+      const sessionsData = await getUserSessions(userId);
+
+      // Transformation des données via le mapper
+      const mappedSessions = mapSessions(sessionsData);
+
+      setSessions(mappedSessions);
+    } catch (err) {
+      const errorMessage = err.message || "Erreur lors du chargement des sessions";
+      setError(errorMessage);
+      console.error("Erreur useSessionsData:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /**
+   * Fonction pour effacer l'erreur actuelle
+   * @function clearError
+   */
+  const clearError = () => {
+    setError(null);
+  };
+
+  /**
+   * Effet pour charger les données de sessions au montage et lors du changement d'userId
+   * Utilise un flag mounted pour éviter les mises à jour sur composant démonté
+   */
+  useEffect(() => {
+    let mounted = true;
+
+    if (userId) {
+      fetchSessions().then(() => {
+        if (!mounted) {
+          // Éviter les mises à jour si le composant est démonté
+          return;
+        }
+      });
+    } else {
+      setLoading(false);
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [userId]);
+
+  return {
+    sessions,
+    loading,
+    error,
+    refetch: fetchSessions,
+    clearError
+  };
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#BASE_URL">BASE_URL</a></li><li><a href="global.html#BarChart">BarChart</a></li><li><a href="global.html#COLORS">COLORS</a></li><li><a href="global.html#CustomTooltip">CustomTooltip</a></li><li><a href="global.html#ENDURANCE_DY">ENDURANCE_DY</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#KPICard">KPICard</a></li><li><a href="global.html#LABELS">LABELS</a></li><li><a href="global.html#ORDER">ORDER</a></li><li><a href="global.html#SessionTooltip">SessionTooltip</a></li><li><a href="global.html#Sidebar">Sidebar</a></li><li><a href="global.html#USE_MOCK">USE_MOCK</a></li><li><a href="global.html#api">api</a></li><li><a href="global.html#clearError">clearError</a></li><li><a href="global.html#dayMap">dayMap</a></li><li><a href="global.html#fetchActivity">fetchActivity</a></li><li><a href="global.html#fetchPerformance">fetchPerformance</a></li><li><a href="global.html#fetchSessions">fetchSessions</a></li><li><a href="global.html#fetchUser">fetchUser</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#getUserActivity">getUserActivity</a></li><li><a href="global.html#getUserPerformance">getUserPerformance</a></li><li><a href="global.html#getUserSessions">getUserSessions</a></li><li><a href="global.html#http">http</a></li><li><a href="global.html#mapActivity">mapActivity</a></li><li><a href="global.html#mapPerformance">mapPerformance</a></li><li><a href="global.html#mapSessions">mapSessions</a></li><li><a href="global.html#mapUser">mapUser</a></li><li><a href="global.html#mockActivity">mockActivity</a></li><li><a href="global.html#mockPerformance">mockPerformance</a></li><li><a href="global.html#mockSessions">mockSessions</a></li><li><a href="global.html#mockUser">mockUser</a></li><li><a href="global.html#useActivityData">useActivityData</a></li><li><a href="global.html#usePerformanceData">usePerformanceData</a></li><li><a href="global.html#useSessionsData">useSessionsData</a></li><li><a href="global.html#useUserData">useUserData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Sep 11 2025 22:33:28 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

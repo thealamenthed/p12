@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: features/profile/components/BarChart.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: features/profile/components/BarChart.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useMemo} from "react";
+import PropTypes from "prop-types";
+import {BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine} from "recharts";
+import "./BarChart.css";
+
+/**
+ * Composant de tooltip personnalisé pour le graphique en barres
+ * Affiche les valeurs exactes avec un style rouge personnalisé
+ * @param {boolean} active - Indique si le tooltip est actif
+ * @param {Array} payload - Données du point survolé
+ * @returns {JSX.Element|null} Tooltip stylisé ou null si inactif
+ */
+const CustomTooltip = ({active, payload}) => {
+  if (active &amp;&amp; payload &amp;&amp; payload.length) {
+    return (
+      &lt;div
+        style={{
+          backgroundColor: "#E60000",
+          color: "#fff",
+          border: "none",
+          borderRadius: 0,
+          padding: "10px 8px",
+          textAlign: "center"
+        }}>
+        {payload.map((entry, index) => (
+          &lt;div key={index} style={{color: "#fff", fontSize: 12}}>
+            {entry.value} {entry.name}
+          &lt;/div>
+        ))}
+      &lt;/div>
+    );
+  }
+  return null;
+};
+
+/**
+ * Configuration des couleurs pour le graphique en barres
+ * @constant {Object} COLORS - Palette de couleurs du composant
+ * @property {string} COLORS.kg - Couleur des barres de poids (#282D30 - noir)
+ * @property {string} COLORS.kcal - Couleur des barres de calories (#E60000 - rouge)
+ * @property {string} COLORS.grid - Couleur de la grille (#DEDEDE - gris clair)
+ * @property {string} COLORS.tick - Couleur des étiquettes (#9B9EAC - gris)
+ * @property {string} COLORS.cursor - Couleur du curseur de survol (gris transparent)
+ */
+const COLORS = {
+  kg: "#282D30",
+  kcal: "#E60000",
+  grid: "#DEDEDE",
+  tick: "#9B9EAC",
+  cursor: "rgba(196,196,196,0.5)"
+};
+
+/**
+ * Composant graphique en barres pour afficher l'activité quotidienne
+ * Affiche le poids (kg) et les calories brûlées (kCal) sur une période donnée
+ * @param {Object} props - Propriétés du composant
+ * @param {Object} props.data - Données d'activité de l'utilisateur
+ * @param {number} props.data.userId - Identifiant de l'utilisateur
+ * @param {Array} props.data.sessions - Tableau des sessions d'activité
+ * @param {string|number} props.data.sessions[].day - Jour de la session
+ * @param {number} props.data.sessions[].kilogram - Poids en kilogrammes (requis)
+ * @param {number} props.data.sessions[].calories - Calories brûlées (requis)
+ * @returns {JSX.Element} Graphique en barres avec double axe
+ */
+const BarChart = ({data}) => {
+  if (!data || !data.sessions) {
+    return &lt;div className="chart-error">Aucune donnée disponible&lt;/div>;
+  }
+
+  /**
+   * Transformation des données pour l'affichage
+   * Limite à 10 sessions maximum et convertit les jours en chaînes
+   */
+  const limitedSessions = data.sessions.slice(0, 10);
+  const chartData = limitedSessions.map((s, i) => ({
+    day: String(i + 1),
+    kilogram: s.kilogram,
+    calories: s.calories
+  }));
+
+  /**
+   * Calcul des domaines et ticks pour les axes Y
+   * Optimisé avec useMemo pour éviter les recalculs inutiles
+   * @returns {Object} Configuration des domaines et ticks
+   */
+  const {kgDomain, kgTicks, calMax} = useMemo(() => {
+    const kgVals = chartData.map((d) => d.kilogram);
+    const min = Math.min(...kgVals) - 5; // Marge inférieure de 5kg
+    const max = Math.max(...kgVals) + 5; // Marge supérieure de 5kg
+    const span = Math.max(1, max - min);
+    const step = Math.ceil(span / 2); // 3 ticks: min, milieu, max
+    const calMax = Math.ceil(Math.max(...chartData.map((d) => d.calories)) + 20);
+
+    return {
+      kgDomain: [min, max],
+      kgTicks: [min, min + step, max],
+      calMax
+    };
+  }, [chartData]);
+
+  return (
+    &lt;div className="bar-chart-container">
+      &lt;div className="chart-header">
+        &lt;h3>Activité quotidienne&lt;/h3>
+        &lt;div className="chart-legend">
+          &lt;div className="legend-item">
+            &lt;span className="legend-dot" style={{backgroundColor: COLORS.kg}} />
+            &lt;span className="legend-text">Poids (kg)&lt;/span>
+          &lt;/div>
+          &lt;div className="legend-item">
+            &lt;span className="legend-dot" style={{backgroundColor: COLORS.kcal}} />
+            &lt;span className="legend-text">Calories brûlées (kCal)&lt;/span>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+
+      &lt;ResponsiveContainer width="100%" height={300}>
+        &lt;RechartsBarChart data={chartData} margin={{top: 20, right: 20, left: 20, bottom: 10}} barCategoryGap={32} barGap={8}>
+          {/* Grille personnalisée avec lignes de référence horizontales */}
+          &lt;CartesianGrid vertical={false} horizontal={false} stroke={COLORS.grid} />
+          {/* Lignes horizontales personnalisées alignées sur l'axe de droite */}
+          &lt;ReferenceLine yAxisId="right" y={kgTicks[0]} stroke={COLORS.grid} strokeWidth={1} />
+          &lt;ReferenceLine yAxisId="right" y={kgTicks[1]} stroke={COLORS.grid} strokeDasharray="3 3" />
+          &lt;ReferenceLine yAxisId="right" y={kgTicks[2]} stroke={COLORS.grid} strokeDasharray="3 3" />
+          &lt;XAxis
+            dataKey="day"
+            type="category"
+            allowDuplicatedCategory={false}
+            tick={{fontSize: 14, fill: COLORS.tick, fontWeight: 500}}
+            tickLine={false}
+            axisLine={false}
+          />
+          {/* Axe Y gauche pour les calories (masqué) */}
+          &lt;YAxis yAxisId="left" orientation="left" domain={[0, calMax]} hide />
+          {/* Axe Y droit pour le poids (visible) */}
+          &lt;YAxis
+            yAxisId="right"
+            orientation="right"
+            domain={kgDomain}
+            ticks={kgTicks}
+            tick={{fontSize: 12, fill: COLORS.tick}}
+            tickLine={false}
+            axisLine={false}
+            allowDecimals={false}
+          />
+          {/* Tooltip personnalisé avec curseur */}
+          &lt;Tooltip cursor={{fill: COLORS.cursor}} content={&lt;CustomTooltip />} />
+          {/* Barres de poids (axe droit) */}
+          &lt;Bar yAxisId="right" dataKey="kilogram" name="kg" fill={COLORS.kg} radius={[3, 3, 0, 0]} barSize={7} />
+          {/* Barres de calories (axe gauche) */}
+          &lt;Bar yAxisId="left" dataKey="calories" name="Kcal" fill={COLORS.kcal} radius={[3, 3, 0, 0]} barSize={7} />
+        &lt;/RechartsBarChart>
+      &lt;/ResponsiveContainer>
+    &lt;/div>
+  );
+};
+
+BarChart.propTypes = {
+  data: PropTypes.shape({
+    userId: PropTypes.number,
+    sessions: PropTypes.arrayOf(
+      PropTypes.shape({
+        day: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        kilogram: PropTypes.number.isRequired,
+        calories: PropTypes.number.isRequired
+      })
+    )
+  })
+};
+
+export default BarChart;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#BASE_URL">BASE_URL</a></li><li><a href="global.html#BarChart">BarChart</a></li><li><a href="global.html#COLORS">COLORS</a></li><li><a href="global.html#CustomTooltip">CustomTooltip</a></li><li><a href="global.html#ENDURANCE_DY">ENDURANCE_DY</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#KPICard">KPICard</a></li><li><a href="global.html#LABELS">LABELS</a></li><li><a href="global.html#ORDER">ORDER</a></li><li><a href="global.html#SessionTooltip">SessionTooltip</a></li><li><a href="global.html#Sidebar">Sidebar</a></li><li><a href="global.html#USE_MOCK">USE_MOCK</a></li><li><a href="global.html#api">api</a></li><li><a href="global.html#clearError">clearError</a></li><li><a href="global.html#dayMap">dayMap</a></li><li><a href="global.html#fetchActivity">fetchActivity</a></li><li><a href="global.html#fetchPerformance">fetchPerformance</a></li><li><a href="global.html#fetchSessions">fetchSessions</a></li><li><a href="global.html#fetchUser">fetchUser</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#getUserActivity">getUserActivity</a></li><li><a href="global.html#getUserPerformance">getUserPerformance</a></li><li><a href="global.html#getUserSessions">getUserSessions</a></li><li><a href="global.html#http">http</a></li><li><a href="global.html#mapActivity">mapActivity</a></li><li><a href="global.html#mapPerformance">mapPerformance</a></li><li><a href="global.html#mapSessions">mapSessions</a></li><li><a href="global.html#mapUser">mapUser</a></li><li><a href="global.html#mockActivity">mockActivity</a></li><li><a href="global.html#mockPerformance">mockPerformance</a></li><li><a href="global.html#mockSessions">mockSessions</a></li><li><a href="global.html#mockUser">mockUser</a></li><li><a href="global.html#useActivityData">useActivityData</a></li><li><a href="global.html#usePerformanceData">usePerformanceData</a></li><li><a href="global.html#useSessionsData">useSessionsData</a></li><li><a href="global.html#useUserData">useUserData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Sep 11 2025 22:33:28 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

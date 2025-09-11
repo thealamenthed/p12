@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: features/profile/ProfilePage.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: features/profile/ProfilePage.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react";
+import "./ProfilePage.css";
+
+import BarChart from "./components/BarChart";
+import LineChart from "./components/LineChart";
+import RadarChart from "./components/RadarChart";
+import RadialBarChart from "./components/RadialBarChart";
+import KPICard from "./components/KPICard";
+import caloriesIcon from "../../assets/icons/energy.svg";
+import proteinIcon from "../../assets/icons/chicken.svg";
+import carbsIcon from "../../assets/icons/apple.svg";
+import lipidIcon from "../../assets/icons/cheeseburger.svg";
+
+// Import des hooks personnalisés
+import {useUserData, useActivityData, useSessionsData, usePerformanceData} from "./hooks";
+
+/**
+ * Page de profil utilisateur avec tableau de bord complet
+ * Affiche les données de performance, activité et KPIs de l'utilisateur
+ * Utilise des hooks personnalisés pour la gestion des données
+ * @param {Object} props - Propriétés du composant
+ * @param {number} [props.userId=12] - Identifiant de l'utilisateur à afficher
+ * @returns {JSX.Element} Page de profil avec graphiques et indicateurs
+ */
+export default function ProfilePage({userId = 12}) {
+  /**
+   * Hooks personnalisés pour la gestion des données
+   * Chaque hook gère son propre état de chargement et d'erreur
+   */
+  const {user, loading: userLoading, error: userError} = useUserData(userId);
+  const {activity, loading: activityLoading, error: activityError} = useActivityData(userId);
+  const {sessions, loading: sessionsLoading, error: sessionsError} = useSessionsData(userId);
+  const {performance, loading: performanceLoading, error: performanceError} = usePerformanceData(userId);
+
+  /**
+   * États globaux dérivés des hooks individuels
+   * @type {boolean} loading - État de chargement global (true si au moins un hook charge)
+   * @type {string|null} error - Première erreur rencontrée parmi tous les hooks
+   */
+  const loading = userLoading || activityLoading || sessionsLoading || performanceLoading;
+  const error = userError || activityError || sessionsError || performanceError;
+
+  /**
+   * Configuration des cartes KPI à afficher
+   * Transforme les données utilisateur en format attendu par KPICard
+   * @type {Array} kpis - Liste des indicateurs clés de performance
+   */
+  const kpis = user?.keyData
+    ? [
+        {title: "Calories", value: user.keyData.calories, unit: "kCal", icon: caloriesIcon},
+        {title: "Protéines", value: user.keyData.proteins, unit: "g", icon: proteinIcon},
+        {title: "Glucides", value: user.keyData.carbs, unit: "g", icon: carbsIcon},
+        {title: "Lipides", value: user.keyData.lipids, unit: "g", icon: lipidIcon}
+      ]
+    : [];
+
+  return (
+    &lt;section className="profile-page">
+      {/* En-tête avec salutation et message de félicitations */}
+      &lt;header className="profile-header">
+        &lt;h1 className="profile-title">
+          Bonjour &lt;span className="user-name">{user?.firstName ?? "Utilisateur"}&lt;/span>
+        &lt;/h1>
+        &lt;p className="congratulation-message">{loading ? "Chargement des données…" : "Félicitations ! Vous avez explosé vos objectifs hier 👏"}&lt;/p>
+        {error ? &lt;p style={{color: "#E60000", margin: 0}}>Erreur de chargement : {error}&lt;/p> : null}
+      &lt;/header>
+
+      {/* Grille principale avec graphiques et KPIs */}
+      &lt;div className="profile-grid">
+        {/* Colonne des graphiques */}
+        &lt;div className="charts-col">
+          {/* Graphique principal : activité quotidienne */}
+          &lt;div className="chart-container">
+            &lt;BarChart data={activity} />
+          &lt;/div>
+
+          {/* Ligne des petits graphiques */}
+          &lt;div className="small-charts-row">
+            {/* Graphique en ligne : durée des sessions */}
+            &lt;div className="chart-container line-chart-wrapper">
+              &lt;LineChart data={sessions} />
+            &lt;/div>
+            {/* Graphique radar : performances */}
+            &lt;div className="chart-container radar-chart-wrapper">
+              &lt;RadarChart data={performance} />
+            &lt;/div>
+            {/* Graphique radial : score utilisateur */}
+            &lt;div className="chart-container radial-chart-wrapper">
+              &lt;RadialBarChart data={user?.score ?? 0} />
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+
+        {/* Colonne des indicateurs KPI */}
+        &lt;aside className="kpi-col">
+          {kpis.map((k, i) => (
+            &lt;KPICard key={i} title={k.title} value={k.value} unit={k.unit} icon={k.icon} />
+          ))}
+        &lt;/aside>
+      &lt;/div>
+    &lt;/section>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#BASE_URL">BASE_URL</a></li><li><a href="global.html#BarChart">BarChart</a></li><li><a href="global.html#COLORS">COLORS</a></li><li><a href="global.html#CustomTooltip">CustomTooltip</a></li><li><a href="global.html#ENDURANCE_DY">ENDURANCE_DY</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#KPICard">KPICard</a></li><li><a href="global.html#LABELS">LABELS</a></li><li><a href="global.html#ORDER">ORDER</a></li><li><a href="global.html#SessionTooltip">SessionTooltip</a></li><li><a href="global.html#Sidebar">Sidebar</a></li><li><a href="global.html#USE_MOCK">USE_MOCK</a></li><li><a href="global.html#api">api</a></li><li><a href="global.html#clearError">clearError</a></li><li><a href="global.html#dayMap">dayMap</a></li><li><a href="global.html#fetchActivity">fetchActivity</a></li><li><a href="global.html#fetchPerformance">fetchPerformance</a></li><li><a href="global.html#fetchSessions">fetchSessions</a></li><li><a href="global.html#fetchUser">fetchUser</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#getUserActivity">getUserActivity</a></li><li><a href="global.html#getUserPerformance">getUserPerformance</a></li><li><a href="global.html#getUserSessions">getUserSessions</a></li><li><a href="global.html#http">http</a></li><li><a href="global.html#mapActivity">mapActivity</a></li><li><a href="global.html#mapPerformance">mapPerformance</a></li><li><a href="global.html#mapSessions">mapSessions</a></li><li><a href="global.html#mapUser">mapUser</a></li><li><a href="global.html#mockActivity">mockActivity</a></li><li><a href="global.html#mockPerformance">mockPerformance</a></li><li><a href="global.html#mockSessions">mockSessions</a></li><li><a href="global.html#mockUser">mockUser</a></li><li><a href="global.html#useActivityData">useActivityData</a></li><li><a href="global.html#usePerformanceData">usePerformanceData</a></li><li><a href="global.html#useSessionsData">useSessionsData</a></li><li><a href="global.html#useUserData">useUserData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Sep 11 2025 22:33:28 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

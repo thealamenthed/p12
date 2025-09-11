@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: features/profile/components/RadarChart.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: features/profile/components/RadarChart.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useMemo} from "react";
+import PropTypes from "prop-types";
+import {RadarChart as RechartsRadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer} from "recharts";
+import "./RadarChart.css";
+
+/**
+ * Mapping des types de performance vers leurs labels français
+ * @constant {Object} LABELS - Correspondance clé API -> label affiché
+ */
+const LABELS = {
+  intensity: "Intensité",
+  speed: "Vitesse",
+  strength: "Force",
+  endurance: "Endurance",
+  energy: "Énergie",
+  cardio: "Cardio"
+};
+
+/**
+ * Ordre d'affichage des axes du radar (sens horaire)
+ * Commence en haut et tourne dans le sens horaire
+ * @constant {Array&lt;string>} ORDER - Ordre des catégories de performance
+ */
+const ORDER = ["intensity", "speed", "strength", "endurance", "energy", "cardio"];
+
+/**
+ * Décalage vertical pour le label "Endurance"
+ * Ajuste la position pour un meilleur alignement visuel
+ * @constant {number} ENDURANCE_DY - Décalage en pixels
+ */
+const ENDURANCE_DY = 8;
+
+/**
+ * Composant graphique radar pour afficher les performances de l'utilisateur
+ * Affiche 6 catégories de performance (cardio, énergie, endurance, force, vitesse, intensité)
+ * @param {Object} props - Propriétés du composant
+ * @param {Object} props.data - Données de performance de l'utilisateur
+ * @param {Object} props.data.kind - Mapping des IDs vers les noms de catégories
+ * @param {Array} props.data.data - Tableau des valeurs de performance
+ * @param {number} props.data.data[].value - Valeur de performance (requis)
+ * @param {number} props.data.data[].kind - ID de la catégorie (requis)
+ * @returns {JSX.Element} Graphique radar avec 6 axes de performance
+ */
+export default function RadarChart({data}) {
+  /**
+   * Sécurisation des données d'entrée
+   * Garantit qu'on a toujours des objets valides, même vides
+   */
+  const kind = data?.kind || {};
+  const rawData = Array.isArray(data?.data) ? data.data : [];
+
+  /**
+   * Transformation et ordonnancement des données pour le radar
+   * Mappe les données API vers le format attendu et les ordonne selon ORDER
+   * @returns {Array} Données formatées et ordonnées pour l'affichage
+   */
+  const chartData = useMemo(() => {
+    const mapped = rawData.map((d) => {
+      const key = kind[d.kind];
+      return {key, subject: LABELS[key] ?? String(key ?? ""), value: Number(d.value) || 0};
+    });
+    return ORDER.map((k) => mapped.find((r) => r?.key === k)).filter(Boolean);
+  }, [rawData, kind]);
+
+  /**
+   * Calcul du maximum pour les anneaux du radar
+   * Arrondit au multiple de 10 supérieur pour des anneaux "propres"
+   * @returns {number} Valeur maximale arrondie ou 100 par défaut
+   */
+  const max = useMemo(() => {
+    if (!chartData.length) return 100;
+    const m = Math.max(...chartData.map((d) => d.value));
+    return Math.ceil(m / 10) * 10 || 100;
+  }, [chartData]);
+
+  /**
+   * Rendu personnalisé des étiquettes d'angle
+   * Applique un décalage vertical spécifique pour "Endurance"
+   * @param {Object} params - Paramètres de rendu du tick
+   * @param {Object} params.payload - Données du tick
+   * @param {number} params.x - Position X
+   * @param {number} params.y - Position Y
+   * @param {string} params.textAnchor - Ancrage du texte
+   * @returns {JSX.Element} Élément texte stylisé
+   */
+  const renderAngleTick = ({payload, x, y, textAnchor}) => {
+    const label = payload?.value;
+    const dy = label === "Endurance" ? ENDURANCE_DY : 0;
+    return (
+      &lt;text x={x} y={y} dy={dy} textAnchor={textAnchor} fill="#FFFFFF" fontSize={14} fontWeight={600}>
+        {label}
+      &lt;/text>
+    );
+  };
+
+  return (
+    &lt;div className="radar-chart-container">
+      {/* Overlay "no data" si vide */}
+      {!chartData.length &amp;&amp; &lt;div className="chart-error">Aucune donnée disponible&lt;/div>}
+
+      &lt;ResponsiveContainer width="100%" height="100%">
+        &lt;RechartsRadarChart data={chartData} outerRadius="70%" margin={{top: 16, right: 16, bottom: 16, left: 16}}>
+          {/* Grille polaire polygonale sans lignes radiales */}
+          &lt;PolarGrid gridType="polygon" radialLines={false} stroke="rgba(255,255,255,0.8)" />
+
+          {/* Axe des angles avec rendu personnalisé des étiquettes */}
+          &lt;PolarAngleAxis dataKey="subject" tick={renderAngleTick} />
+
+          {/* Axe des rayons avec 5 anneaux concentriques */}
+          &lt;PolarRadiusAxis
+            domain={[0, max]}
+            tickCount={6} // 5 anneaux visibles
+            tick={false}
+            axisLine={false}
+            angle={90}
+          />
+
+          {/* Zone radar rouge avec transparence */}
+          &lt;Radar dataKey="value" stroke="transparent" fill="#FF0101" fillOpacity={0.6} />
+        &lt;/RechartsRadarChart>
+      &lt;/ResponsiveContainer>
+    &lt;/div>
+  );
+}
+
+RadarChart.propTypes = {
+  data: PropTypes.shape({
+    kind: PropTypes.object,
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        value: PropTypes.number,
+        kind: PropTypes.number
+      })
+    )
+  })
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#BASE_URL">BASE_URL</a></li><li><a href="global.html#BarChart">BarChart</a></li><li><a href="global.html#COLORS">COLORS</a></li><li><a href="global.html#CustomTooltip">CustomTooltip</a></li><li><a href="global.html#ENDURANCE_DY">ENDURANCE_DY</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#KPICard">KPICard</a></li><li><a href="global.html#LABELS">LABELS</a></li><li><a href="global.html#ORDER">ORDER</a></li><li><a href="global.html#SessionTooltip">SessionTooltip</a></li><li><a href="global.html#Sidebar">Sidebar</a></li><li><a href="global.html#USE_MOCK">USE_MOCK</a></li><li><a href="global.html#api">api</a></li><li><a href="global.html#clearError">clearError</a></li><li><a href="global.html#dayMap">dayMap</a></li><li><a href="global.html#fetchActivity">fetchActivity</a></li><li><a href="global.html#fetchPerformance">fetchPerformance</a></li><li><a href="global.html#fetchSessions">fetchSessions</a></li><li><a href="global.html#fetchUser">fetchUser</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#getUserActivity">getUserActivity</a></li><li><a href="global.html#getUserPerformance">getUserPerformance</a></li><li><a href="global.html#getUserSessions">getUserSessions</a></li><li><a href="global.html#http">http</a></li><li><a href="global.html#mapActivity">mapActivity</a></li><li><a href="global.html#mapPerformance">mapPerformance</a></li><li><a href="global.html#mapSessions">mapSessions</a></li><li><a href="global.html#mapUser">mapUser</a></li><li><a href="global.html#mockActivity">mockActivity</a></li><li><a href="global.html#mockPerformance">mockPerformance</a></li><li><a href="global.html#mockSessions">mockSessions</a></li><li><a href="global.html#mockUser">mockUser</a></li><li><a href="global.html#useActivityData">useActivityData</a></li><li><a href="global.html#usePerformanceData">usePerformanceData</a></li><li><a href="global.html#useSessionsData">useSessionsData</a></li><li><a href="global.html#useUserData">useUserData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Sep 11 2025 22:33:28 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

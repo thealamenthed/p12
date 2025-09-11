@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: api/__mocks__/user.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: api/__mocks__/user.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Génère des données utilisateur mockées pour les tests et le développement
+ * @param {number} [id=12] - Identifiant de l'utilisateur mocké
+ * @returns {Object} Données utilisateur mockées au format API
+ * @returns {Object} returns.data - Données principales de l'utilisateur
+ * @returns {number} returns.data.id - Identifiant utilisateur
+ * @returns {Object} returns.data.userInfos - Informations personnelles
+ * @returns {string} returns.data.userInfos.firstName - Prénom
+ * @returns {string} returns.data.userInfos.lastName - Nom
+ * @returns {number} returns.data.userInfos.age - Âge
+ * @returns {number} returns.data.todayScore - Score du jour (0-1)
+ * @returns {Object} returns.data.keyData - Données nutritionnelles
+ * @returns {number} returns.data.keyData.calorieCount - Calories
+ * @returns {number} returns.data.keyData.proteinCount - Protéines
+ * @returns {number} returns.data.keyData.carbohydrateCount - Glucides
+ * @returns {number} returns.data.keyData.lipidCount - Lipides
+ */
+export const mockUser = (id = 12) => ({
+  data: {
+    id,
+    userInfos: {firstName: "Thomas", lastName: "Dovineau", age: 31},
+    todayScore: 0.29,
+    keyData: {calorieCount: 2330, proteinCount: 185, carbohydrateCount: 270, lipidCount: 70}
+  }
+});
+
+/**
+ * Données d'activité mockées pour le BarChart
+ * Contient 10 sessions avec poids et calories sur une période
+ * @constant {Object} mockActivity - Données d'activité mockées
+ * @property {Object} mockActivity.data - Données principales
+ * @property {Array} mockActivity.data.sessions - Sessions d'activité
+ * @property {string} mockActivity.data.sessions[].day - Jour au format ISO
+ * @property {number} mockActivity.data.sessions[].kilogram - Poids en kg
+ * @property {number} mockActivity.data.sessions[].calories - Calories brûlées
+ */
+export const mockActivity = {
+  data: {
+    sessions: [
+      {day: "2020-07-01", kilogram: 80, calories: 240},
+      {day: "2020-07-02", kilogram: 80, calories: 220},
+      {day: "2020-07-03", kilogram: 81, calories: 280},
+      {day: "2020-07-04", kilogram: 81, calories: 290},
+      {day: "2020-07-05", kilogram: 80, calories: 160},
+      {day: "2020-07-06", kilogram: 78, calories: 162},
+      {day: "2020-07-07", kilogram: 76, calories: 390},
+      {day: "2020-07-08", kilogram: 76, calories: 390},
+      {day: "2020-07-09", kilogram: 76, calories: 390},
+      {day: "2020-07-10", kilogram: 76, calories: 390}
+    ]
+  }
+};
+
+/**
+ * Données de sessions mockées pour le LineChart
+ * Contient 7 sessions correspondant aux jours de la semaine (1-7)
+ * @constant {Object} mockSessions - Données de sessions mockées
+ * @property {Object} mockSessions.data - Données principales
+ * @property {Array} mockSessions.data.sessions - Sessions d'entraînement
+ * @property {number} mockSessions.data.sessions[].day - Jour de la semaine (1-7)
+ * @property {number} mockSessions.data.sessions[].sessionLength - Durée en minutes
+ */
+export const mockSessions = {
+  data: {
+    sessions: [
+      {day: 1, sessionLength: 60},
+      {day: 2, sessionLength: 50},
+      {day: 3, sessionLength: 45},
+      {day: 4, sessionLength: 50},
+      {day: 5, sessionLength: 20},
+      {day: 6, sessionLength: 10},
+      {day: 7, sessionLength: 60}
+    ]
+  }
+};
+
+/**
+ * Données de performance mockées pour le RadarChart
+ * Contient 6 catégories de performance avec leurs valeurs
+ * @constant {Object} mockPerformance - Données de performance mockées
+ * @property {Object} mockPerformance.data - Données principales
+ * @property {Object} mockPerformance.data.kind - Mapping des IDs vers les catégories
+ * @property {string} mockPerformance.data.kind[1] - "cardio"
+ * @property {string} mockPerformance.data.kind[2] - "energy"
+ * @property {string} mockPerformance.data.kind[3] - "endurance"
+ * @property {string} mockPerformance.data.kind[4] - "strength"
+ * @property {string} mockPerformance.data.kind[5] - "speed"
+ * @property {string} mockPerformance.data.kind[6] - "intensity"
+ * @property {Array} mockPerformance.data.data - Valeurs de performance
+ * @property {number} mockPerformance.data.data[].value - Valeur de performance
+ * @property {number} mockPerformance.data.data[].kind - ID de la catégorie
+ */
+export const mockPerformance = {
+  data: {
+    kind: {1: "cardio", 2: "energy", 3: "endurance", 4: "strength", 5: "speed", 6: "intensity"},
+    data: [
+      {value: 80, kind: 1},
+      {value: 120, kind: 2},
+      {value: 140, kind: 3},
+      {value: 50, kind: 4},
+      {value: 200, kind: 5},
+      {value: 90, kind: 6}
+    ]
+  }
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#BASE_URL">BASE_URL</a></li><li><a href="global.html#BarChart">BarChart</a></li><li><a href="global.html#COLORS">COLORS</a></li><li><a href="global.html#CustomTooltip">CustomTooltip</a></li><li><a href="global.html#ENDURANCE_DY">ENDURANCE_DY</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#KPICard">KPICard</a></li><li><a href="global.html#LABELS">LABELS</a></li><li><a href="global.html#ORDER">ORDER</a></li><li><a href="global.html#SessionTooltip">SessionTooltip</a></li><li><a href="global.html#Sidebar">Sidebar</a></li><li><a href="global.html#USE_MOCK">USE_MOCK</a></li><li><a href="global.html#api">api</a></li><li><a href="global.html#clearError">clearError</a></li><li><a href="global.html#dayMap">dayMap</a></li><li><a href="global.html#fetchActivity">fetchActivity</a></li><li><a href="global.html#fetchPerformance">fetchPerformance</a></li><li><a href="global.html#fetchSessions">fetchSessions</a></li><li><a href="global.html#fetchUser">fetchUser</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#getUserActivity">getUserActivity</a></li><li><a href="global.html#getUserPerformance">getUserPerformance</a></li><li><a href="global.html#getUserSessions">getUserSessions</a></li><li><a href="global.html#http">http</a></li><li><a href="global.html#mapActivity">mapActivity</a></li><li><a href="global.html#mapPerformance">mapPerformance</a></li><li><a href="global.html#mapSessions">mapSessions</a></li><li><a href="global.html#mapUser">mapUser</a></li><li><a href="global.html#mockActivity">mockActivity</a></li><li><a href="global.html#mockPerformance">mockPerformance</a></li><li><a href="global.html#mockSessions">mockSessions</a></li><li><a href="global.html#mockUser">mockUser</a></li><li><a href="global.html#useActivityData">useActivityData</a></li><li><a href="global.html#usePerformanceData">usePerformanceData</a></li><li><a href="global.html#useSessionsData">useSessionsData</a></li><li><a href="global.html#useUserData">useUserData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Sep 11 2025 22:33:28 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

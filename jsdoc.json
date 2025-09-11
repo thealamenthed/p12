@@ -1,0 +1,18 @@
+{
+  "plugins": ["plugins/markdown"],
+  "source": {
+    "include": ["src"],
+    "includePattern": ".+\\.(js|jsx)$",
+    "excludePattern": "(^|\\/|\\\\)_(?:tests?|mocks?)\\/"
+  },
+  "opts": {
+    "destination": "./docs/html",
+    "recurse": true,
+    "readme": "./README.md",
+    "template": "templates/default"
+  },
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true
+  }
+}

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>📊 SportSee – Analytics Dashboard</h1>
+<p><img src="https://img.shields.io/badge/React-18.2.0-blue" alt="React"> <img src="https://img.shields.io/badge/Vite-5.0-purple" alt="Vite"> <img src="https://img.shields.io/badge/Axios-HTTP-orange" alt="Axios"> <img src="https://img.shields.io/badge/Recharts-Charts-green" alt="Recharts"></p>
+<h2>📝 Description</h2>
+<p><strong>SportSee</strong> est une application web permettant à un utilisateur de suivre ses performances sportives via un <strong>tableau de bord interactif</strong>.<br>
+Le projet met en avant l'intégration de données depuis une API et leur visualisation sous forme de graphiques et d'indicateurs.</p>
+<h2>🚀 Objectifs pédagogiques</h2>
+<ul>
+<li>Développer des éléments graphiques avancés avec <strong>Recharts</strong> (ou D3.js).</li>
+<li>Intégrer et consommer une <strong>API Node.js</strong> via <code>fetch</code> ou <code>axios</code>.</li>
+<li>Assurer la <strong>qualité et la standardisation des données</strong>.</li>
+<li>Documenter le projet avec <strong>README, JSDoc et PropTypes</strong>.</li>
+</ul>
+<h2>🛠️ Stack technique</h2>
+<ul>
+<li><a href="https://reactjs.org/">React</a> (créé avec <a href="https://vitejs.dev/">Vite</a>)</li>
+<li><a href="https://recharts.org/">Recharts</a> pour les graphiques</li>
+<li><a href="https://axios-http.com/">Axios</a> pour les appels API</li>
+<li><a href="https://reactjs.org/docs/typechecking-with-proptypes.html">PropTypes</a> pour la validation des props</li>
+<li><a href="https://jsdoc.app/">JSDoc</a> pour la documentation du code</li>
+</ul>
+<h2>📂 Structure du projet</h2>
+<pre class="prettyprint source"><code>src/
+  api/             # Services API + mocks
+  components/      # Composants UI réutilisables
+  features/        # Pages/features (ProfilePage)
+    profile/
+      components/  # Composants de graphiques
+      hooks/       # Hooks personnalisés
+      mappers/     # Transformateurs de données
+  lib/             # Helpers & utilitaires
+  styles/          # Fichiers CSS/SASS
+  App.jsx
+</code></pre>
+<h2>⚙️ Installation</h2>
+<h3>Prérequis</h3>
+<ul>
+<li>Node.js (version 16 ou supérieure)</li>
+<li>npm ou yarn</li>
+</ul>
+<h3>1. Cloner le repo</h3>
+<pre class="prettyprint source lang-bash"><code>git clone https://github.com/thealamenthed/p12.git
+cd p12
+</code></pre>
+<h3>2. Installer les dépendances</h3>
+<pre class="prettyprint source lang-bash"><code>npm install
+</code></pre>
+<h3>3. Configuration des variables d'environnement</h3>
+<p>Créer un fichier <code>.env</code> à la racine :</p>
+<pre class="prettyprint source lang-env"><code>VITE_API_URL=http://localhost:3000
+VITE_USE_MOCK=false
+</code></pre>
+<ul>
+<li><code>VITE_API_URL</code> : URL de l'API backend</li>
+<li><code>VITE_USE_MOCK</code> : <code>true</code> pour utiliser des données mockées, <code>false</code> pour utiliser l'API réelle</li>
+</ul>
+<h3>4. Lancer le backend (optionnel)</h3>
+<p>Si vous avez accès au backend Node.js :</p>
+<ul>
+<li>Récupérez le repo backend</li>
+<li>Suivez les instructions d'installation dans le README backend</li>
+<li>Lancez le serveur sur <code>http://localhost:3000</code></li>
+</ul>
+<h3>5. Lancer le frontend</h3>
+<pre class="prettyprint source lang-bash"><code>npm run dev
+</code></pre>
+<p>L'application est disponible sur <a href="http://localhost:5173">http://localhost:5173</a>.</p>
+<h2>📊 Fonctionnalités principales</h2>
+<ul>
+<li><strong>Page profil utilisateur</strong> avec :
+<ul>
+<li><strong>BarChart</strong> → activité quotidienne (poids &amp; calories)</li>
+<li><strong>LineChart</strong> → durée moyenne des sessions</li>
+<li><strong>RadarChart</strong> → performances par catégorie</li>
+<li><strong>RadialBarChart</strong> → score quotidien</li>
+<li><strong>Cartes KPI</strong> (calories, protéines, glucides, lipides)</li>
+</ul>
+</li>
+</ul>
+<h2>🎨 Composants développés</h2>
+<h3>Graphiques</h3>
+<ul>
+<li><code>BarChart</code> : Graphique en barres pour l'activité quotidienne</li>
+<li><code>LineChart</code> : Graphique linéaire pour la durée des sessions</li>
+<li><code>RadarChart</code> : Graphique radar pour les performances par catégorie</li>
+<li><code>RadialBarChart</code> : Graphique circulaire pour le score quotidien</li>
+</ul>
+<h3>Indicateurs</h3>
+<ul>
+<li><code>KPICard</code> : Cartes d'indicateurs clés de performance</li>
+</ul>
+<h3>Hooks personnalisés</h3>
+<ul>
+<li><code>useUserData</code> : Gestion des données utilisateur</li>
+<li><code>useActivityData</code> : Gestion des données d'activité</li>
+<li><code>useSessionsData</code> : Gestion des données de sessions</li>
+<li><code>usePerformanceData</code> : Gestion des données de performance</li>
+</ul>
+<h2>📐 Conventions &amp; Documentation</h2>
+<ul>
+<li><strong>PropTypes</strong> pour typer les composants React</li>
+<li><strong>Mappers</strong> pour transformer les données API en un modèle unique</li>
+<li><strong>JSDoc</strong> pour documenter les services et fonctions utilitaires</li>
+<li><strong>CSS Modules</strong> pour la gestion des styles</li>
+</ul>
+<h2>🔧 Scripts disponibles</h2>
+<pre class="prettyprint source lang-bash"><code>npm run dev          # Lance le serveur de développement
+npm run build        # Construit l'application pour la production
+npm run preview      # Prévisualise la build de production
+npm run lint         # Lance ESLint pour vérifier le code
+</code></pre>
+<h2>📸 Aperçu</h2>
+<img width="1032" height="734" alt="image" src="https://github.com/user-attachments/assets/b15132d6-0c78-4cb3-ad70-275408f24413" />
+<h2>🚀 Déploiement</h2>
+<p>Pour déployer l'application :</p>
+<pre class="prettyprint source lang-bash"><code>npm run build
+</code></pre>
+<p>Les fichiers de production seront générés dans le dossier <code>dist/</code>.</p>
+<h1>Documentation Technique (JSDoc)</h1>
+<p>Cette documentation est générée automatiquement à partir des commentaires JSDoc présents dans le code (<code>src/**/*.js|jsx</code>).</p>
+<h2>Générer la documentation</h2>
+<pre class="prettyprint source lang-bash"><code># Installation (une seule fois)
+npm i -D jsdoc jsdoc-to-markdown
+
+# Générer la doc HTML (dans docs/html)
+npm run docs:html
+
+# Générer la doc Markdown (docs/api.md)
+npm run docs:md
+
+
+## 🤝 Contribution
+
+1. Fork le projet
+2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
+3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
+
+## 📝 Licence
+
+Ce projet est réalisé dans le cadre du parcours _Développeur Web Front End_ d'OpenClassrooms.
+
+## 👤 Auteur
+
+Projet réalisé par Dalila LE dans le cadre du parcours _Développeur Web Front End -- OpenClassrooms_.
+</code></pre></article>
+    </section>
+
+
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>features/profile/hooks/index.js</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Exports des hooks personnalisés pour la gestion des données utilisateur</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+    <dt class="tag-version">Version:</dt>
+    <dd class="tag-version"><ul class="dummy"><li>1.0.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>SportSee Team</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="features_profile_hooks_index.js.html">features/profile/hooks/index.js</a>, <a href="features_profile_hooks_index.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#BASE_URL">BASE_URL</a></li><li><a href="global.html#BarChart">BarChart</a></li><li><a href="global.html#COLORS">COLORS</a></li><li><a href="global.html#CustomTooltip">CustomTooltip</a></li><li><a href="global.html#ENDURANCE_DY">ENDURANCE_DY</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#KPICard">KPICard</a></li><li><a href="global.html#LABELS">LABELS</a></li><li><a href="global.html#ORDER">ORDER</a></li><li><a href="global.html#SessionTooltip">SessionTooltip</a></li><li><a href="global.html#Sidebar">Sidebar</a></li><li><a href="global.html#USE_MOCK">USE_MOCK</a></li><li><a href="global.html#api">api</a></li><li><a href="global.html#clearError">clearError</a></li><li><a href="global.html#dayMap">dayMap</a></li><li><a href="global.html#fetchActivity">fetchActivity</a></li><li><a href="global.html#fetchPerformance">fetchPerformance</a></li><li><a href="global.html#fetchSessions">fetchSessions</a></li><li><a href="global.html#fetchUser">fetchUser</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#getUserActivity">getUserActivity</a></li><li><a href="global.html#getUserPerformance">getUserPerformance</a></li><li><a href="global.html#getUserSessions">getUserSessions</a></li><li><a href="global.html#http">http</a></li><li><a href="global.html#mapActivity">mapActivity</a></li><li><a href="global.html#mapPerformance">mapPerformance</a></li><li><a href="global.html#mapSessions">mapSessions</a></li><li><a href="global.html#mapUser">mapUser</a></li><li><a href="global.html#mockActivity">mockActivity</a></li><li><a href="global.html#mockPerformance">mockPerformance</a></li><li><a href="global.html#mockSessions">mockSessions</a></li><li><a href="global.html#mockUser">mockUser</a></li><li><a href="global.html#useActivityData">useActivityData</a></li><li><a href="global.html#usePerformanceData">usePerformanceData</a></li><li><a href="global.html#useSessionsData">useSessionsData</a></li><li><a href="global.html#useUserData">useUserData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Sep 11 2025 22:33:28 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
