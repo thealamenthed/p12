@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import "./Header.css";
 import logo from "../assets/icons/logo.png";
 
@@ -27,6 +28,14 @@ const Header = () => {
       </nav>
     </header>
   );
+};
+
+/**
+ * Validation des props avec PropTypes
+ * Le composant Header n'accepte pas de props pour le moment
+ */
+Header.propTypes = {
+  // Aucune prop requise pour ce composant
 };
 
 export default Header;

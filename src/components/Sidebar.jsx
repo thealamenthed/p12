@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import "./Sidebar.css";
 import yogaIcon from "../assets/icons/yoga.png";
 import swimmingIcon from "../assets/icons/swimming.png";
@@ -30,6 +31,14 @@ const Sidebar = () => {
       </div>
     </div>
   );
+};
+
+/**
+ * Validation des props avec PropTypes
+ * Le composant Sidebar n'accepte pas de props pour le moment
+ */
+Sidebar.propTypes = {
+  // Aucune prop requise pour ce composant
 };
 
 export default Sidebar;

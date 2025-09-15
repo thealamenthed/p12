@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "./ProfilePage.css";
 
 import BarChart from "./components/BarChart";
@@ -101,3 +102,15 @@ export default function ProfilePage({userId = 12}) {
     </section>
   );
 }
+
+/**
+ * Validation des props avec PropTypes
+ * Définit les types et contraintes pour les propriétés du composant
+ */
+ProfilePage.propTypes = {
+  /**
+   * Identifiant de l'utilisateur à afficher
+   * @type {number} userId - ID numérique de l'utilisateur
+   */
+  userId: PropTypes.number
+};

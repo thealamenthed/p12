@@ -27,7 +27,7 @@ async function http(path, init) {
     const message = await res.text().catch(() => res.statusText);
     throw new Error(`HTTP ${res.status} ${res.statusText}: ${message}`);
   }
-  return res.json();
+  return res.json(); // ← Transformation automatique en JSON
 }
 
 /**

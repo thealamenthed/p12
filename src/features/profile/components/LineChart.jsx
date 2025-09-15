@@ -1,4 +1,5 @@
 import React, {useMemo, useState} from "react";
+import PropTypes from "prop-types";
 import {LineChart as RechartsLineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceDot, ReferenceArea} from "recharts";
 import "./LineChart.css";
 
@@ -228,7 +229,7 @@ export default function LineChart({data}) {
             left: `${(pinnedIndex / (N - 1)) * 100}%`,
             right: 0,
             bottom: 0,
-            background: "rgba(0, 0, 0, 0.3)",
+            background: "rgba(0, 0, 0, 0.1)",
             pointerEvents: "none",
             zIndex: 1
           }}
@@ -237,3 +238,25 @@ export default function LineChart({data}) {
     </div>
   );
 }
+
+/**
+ * Validation des props avec PropTypes
+ * Définit les types et contraintes pour les propriétés du composant
+ */
+LineChart.propTypes = {
+  /**
+   * Données des sessions d'entraînement
+   * @type {Object} data - Objet contenant les sessions
+   * @type {Array} data.sessions - Tableau des sessions avec jour et durée
+   * @type {number} data.sessions[].day - Jour de la semaine (1-7)
+   * @type {number} data.sessions[].sessionLength - Durée de la session en minutes
+   */
+  data: PropTypes.shape({
+    sessions: PropTypes.arrayOf(
+      PropTypes.shape({
+        day: PropTypes.number.isRequired,
+        sessionLength: PropTypes.number.isRequired
+      })
+    )
+  })
+};
