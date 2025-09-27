@@ -18,7 +18,7 @@ Le projet met en avant l'intégration de données depuis une API et leur visuali
 
 - [React](https://reactjs.org/) (créé avec [Vite](https://vitejs.dev/))
 - [Recharts](https://recharts.org/) pour les graphiques
-- [Axios](https://axios-http.com/) pour les appels API
+- [Fetch](https://developer.mozilla.org/fr/docs/Web/API/Fetch_API/) pour les appels API
 - [PropTypes](https://reactjs.org/docs/typechecking-with-proptypes.html) pour la validation des props
 - [JSDoc](https://jsdoc.app/) pour la documentation du code
 
