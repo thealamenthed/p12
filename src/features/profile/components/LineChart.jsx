@@ -102,15 +102,7 @@ export default function LineChart({data}) {
       <h3
         className="line-title"
         style={{
-          position: "absolute",
-          top: 16,
-          left: 16,
           margin: 0,
-          color: "rgba(255,255,255,0.6)",
-          fontSize: 15,
-          fontWeight: 500,
-          lineHeight: 1.2,
-          pointerEvents: "none",
           zIndex: 2
         }}>
         Durée moyenne des
@@ -211,12 +203,16 @@ export default function LineChart({data}) {
             strokeOpacity={0.8}
             strokeWidth={2.5}
             dot={false}
-            activeDot={{r: 6, fill: "#FFFFFF", stroke: "none"}} // Point actif plein, sans halo
+            activeDot={{r: 6, fill: "#FFFFFF", stroke: "none", className: "line-pin-halo"}} // Point actif avec halo
             isAnimationActive={false}
           />
 
-          {/* Point épinglé permanent */}
-          {hasPin && <ReferenceDot xAxisId="line" x={pinnedIndex + 1} y={chartData[pinnedIndex].value} r={6} fill="#FFFFFF" stroke="none" isFront />}
+          {/* Point épinglé permanent avec halo */}
+          {hasPin && (
+            <g className="line-pin-halo">
+              <ReferenceDot xAxisId="line" x={pinnedIndex + 1} y={chartData[pinnedIndex].value} r={6} fill="#FFFFFF" stroke="none" isFront />
+            </g>
+          )}
         </RechartsLineChart>
       </ResponsiveContainer>
 

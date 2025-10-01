@@ -13,10 +13,32 @@
   top: 16px;
   left: 16px;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 15px;
+  font-size: 12px !important;
   font-weight: 500;
   line-height: 1.2;
   pointer-events: none;
+}
+
+/* Taille pour 1440px et plus */
+@media (min-width: 1440px) {
+  .line-title {
+    font-size: 15px !important;
+  }
+}
+
+/* Halo pour le pin du LineChart */
+.line-pin-halo {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.892));
+}
+
+/* Halo pour tous les points actifs */
+.recharts-line .recharts-active-dot {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.952));
+}
+
+/* Halo permanent pour le point épinglé */
+.recharts-reference-dot {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.958));
 }
 
 /* supprime l'effet "bouton" au clic */
