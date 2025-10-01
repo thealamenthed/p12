@@ -38,8 +38,6 @@ export default function RadialBarChart({data}) {
           position: "absolute",
           top: "50%",
           left: "50%",
-          width: 174,
-          height: 174,
           background: "#fff",
           borderRadius: "50%",
           transform: "translate(-50%, -50%)",
@@ -61,15 +59,16 @@ export default function RadialBarChart({data}) {
           zIndex: 2
         }}>
         <div>
-          <div style={{fontSize: 28, fontWeight: 700, color: "#282d30", lineHeight: 1, marginBottom: 6}}>{scorePct}%</div>
-          <div style={{fontSize: 14, color: "#74798c", fontWeight: 600}}>de votre objectif</div>
+          <div className="score-percentage">{scorePct}%</div>
+          <div className="score-text">de votre</div>
+          <div className="score-text">objectif</div>
         </div>
       </div>
 
       {/* Message d'absence de données (seulement si data est null/undefined) */}
       {data == null && <div className="chart-error">Aucune donnée disponible</div>}
       <ResponsiveContainer width="100%" height="100%">
-        <RChart data={series} innerRadius="70%" outerRadius="80%" startAngle={90} endAngle={450}>
+        <RChart data={series} innerRadius="75%" outerRadius="85%" startAngle={90} endAngle={450}>
           {/* Axe polaire masqué pour le domaine 0-100 */}
           <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
           {/* Barre radiale avec progression rouge et piste grise */}

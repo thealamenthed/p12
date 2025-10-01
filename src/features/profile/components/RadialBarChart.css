@@ -1,0 +1,43 @@
+/* Styles pour le cercle blanc central du RadialBarChart */
+
+/* Taille par défaut pour 1024x780 */
+.inner-bg {
+  width: 110px !important;
+  height: 110px !important;
+}
+
+/* Styles pour le texte du score */
+.score-display {
+  font-size: 20px;
+}
+
+.score-display .score-percentage {
+  font-size: 20px;
+  font-weight: 700;
+  color: #282d30;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.score-display .score-text {
+  font-size: 12px;
+  color: #74798c;
+  font-weight: 600;
+}
+
+/* Taille pour 1440px et plus */
+@media (min-width: 1440px) {
+  .inner-bg {
+    width: 190px !important;
+    height: 190px !important;
+  }
+
+  .score-percentage {
+    font-size: 26px !important;
+  }
+
+  .score-text {
+    font-size: 16px !important;
+  }
+
+}
