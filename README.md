@@ -1,6 +1,6 @@
 # 📊 SportSee – Analytics Dashboard
 
-![React](https://img.shields.io/badge/React-18.2.0-blue) ![Vite](https://img.shields.io/badge/Vite-5.0-purple) ![Axios](https://img.shields.io/badge/Axios-HTTP-orange) ![Recharts](https://img.shields.io/badge/Recharts-Charts-green)
+![React](https://img.shields.io/badge/React-18.2.0-blue) ![Vite](https://img.shields.io/badge/Vite-5.0-purple) ![Recharts](https://img.shields.io/badge/Recharts-Charts-green)
 
 ## 📝 Description
 
@@ -10,7 +10,7 @@ Le projet met en avant l'intégration de données depuis une API et leur visuali
 ## 🚀 Objectifs pédagogiques
 
 - Développer des éléments graphiques avancés avec **Recharts** (ou D3.js).
-- Intégrer et consommer une **API Node.js** via `fetch` ou `axios`.
+- Intégrer et consommer une **API Node.js** via `fetch`.
 - Assurer la **qualité et la standardisation des données**.
 - Documenter le projet avec **README, JSDoc et PropTypes**.
 
