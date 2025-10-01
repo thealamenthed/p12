@@ -71,7 +71,7 @@ export default function ProfilePage({userId = 12}) {
         {/* Colonne des graphiques */}
         <div className="charts-col">
           {/* Graphique principal : activité quotidienne */}
-          <div className="chart-container">
+          <div className="chart-container large bar-chart-wrapper">
             <BarChart data={activity} />
           </div>
 
@@ -87,6 +87,7 @@ export default function ProfilePage({userId = 12}) {
             </div>
             {/* Graphique radial : score utilisateur */}
             <div className="chart-container radial-chart-wrapper">
+              <h3>Score</h3>
               <RadialBarChart data={user?.score ?? 0} />
             </div>
           </div>
