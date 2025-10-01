@@ -23,7 +23,6 @@ body {
 html,
 body {
   height: 100%;
-  overflow-x: hidden;
 }
 
 
@@ -31,6 +30,7 @@ body {
 .App {
   display: flex;
   min-height: 100vh;
+  min-width: 1024px;
 }
 
 .main-content {
@@ -39,12 +39,14 @@ body {
   /* Largeur de la sidebar */
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .dashboard-content {
   flex: 1;
   background: #ffffff;
-  padding: 60px;
+  padding: 32px;
+  display: block;
 }
 
 /* Responsive design */
