@@ -2,7 +2,7 @@
   background: #FBFBFB;
   border-radius: 5px;
   padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  box-shadow: none;
   display: flex;
   align-items: center;
   gap: 15px;
@@ -14,7 +14,7 @@
 
 .kpi-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
 }
 
 .kpi-icon {
