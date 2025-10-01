@@ -22,6 +22,20 @@
 }
 
 
+/* Styles pour les labels du radar */
+.radar-label {
+  font-size: 10px !important;
+  font-weight: 600;
+  fill: #FFFFFF;
+}
+
+/* Taille pour 1440px et plus */
+@media (min-width: 1440px) {
+  .radar-label {
+    font-size: 12px !important;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .radar-chart-container {

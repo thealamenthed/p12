@@ -87,7 +87,7 @@ export default function RadarChart({data}) {
     const label = payload?.value;
     const dy = label === "Endurance" ? ENDURANCE_DY : 0;
     return (
-      <text x={x} y={y} dy={dy} textAnchor={textAnchor} fill="#FFFFFF" fontSize={14} fontWeight={600}>
+      <text x={x} y={y} dy={dy} textAnchor={textAnchor} className="radar-label">
         {label}
       </text>
     );
