@@ -74,7 +74,7 @@ VITE_USE_MOCK=false
 
 Si vous avez accès au backend Node.js :
 
-- Récupérez le repo backend
+- Récupérez le repo backend : https://github.com/OpenClassrooms-Student-Center/SportSee
 - Suivez les instructions d'installation dans le README backend
 - Lancez le serveur sur `http://localhost:3000`
 
